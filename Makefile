@@ -1,7 +1,8 @@
-SOURCE_FILE := ../bfs_run.log
+SOURCE_FILE := runs/out.txt
+DEST_FILE := expirements.json
 
 expirement:
-	python3 heuristic_sim.py $(SOURCE_FILE)
+	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
 
 plot:
 	python3 plot.py

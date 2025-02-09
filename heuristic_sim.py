@@ -274,7 +274,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, theta=1000, num_threads=32, capac
 if __name__ == "__main__":
 	# Get all Thread Masks from run.log
 	source_file = sys.argv[1]
-	results_file = "expirements.json"
+	results_file = sys.argv[2]
 
 	warps_tmasks = {}
 	warps_instrs = {}
@@ -292,16 +292,18 @@ if __name__ == "__main__":
 		while True:
 			line = file.readline()
 		
-			config_pattern = r"CONFIGS: num_threads=([0-9]*), num_warps=([0-9]*), num_cores=([0-9]*), num_clusters=([0-9]*), socket_size=([0-9]*), local_mem_base=(0x([a-f]|[0-9])*), num_barriers=([1-9]+)"
+			config_pattern = r"-gpgpu_shader_core_pipeline              ([0-9]+):([0-9]+)"
 			tmask_pattern = r"DEBUG Fetch: cid=([0-9]+), wid=([0-9]+), tmask=([1|0]+), PC=0x([0-9a-f]+) \((#[0-9]+)\)"
 			instr_pattern = r"DEBUG Instr 0x(.+): ([A-Z]+[.]?([A-Z])*) (.*)"
-			end_pattern = r"make: Leaving directory '(.+)'"
+			end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
 
 			if(re.search(config_pattern,line)):
-				num_threads = int(re.search(config_pattern,line).group(1))
-				num_warps = int(re.search(config_pattern,line).group(2))
+				total_num_threads = int(re.search(config_pattern,line).group(1))
+				num_threads = int(re.search(config_pattern,line).group(2))
+				# num_warps = total_num_threads / num_threads
+				num_warps = 32
 
-				warps_to_probe = ["0"] * num_warps
+				warps_to_probe = ["0" for _ in range(num_warps)]
 				for i in range(num_warps):
 					warps_to_probe[i] = str(int(warps_to_probe[0]) + i)
 					warps_tmasks[warps_to_probe[i]] = []
