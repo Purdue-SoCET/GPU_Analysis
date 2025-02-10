@@ -1,5 +1,5 @@
 SOURCE_FILE := runs/out.txt
-DEST_FILE := expirements.json
+DEST_FILE := expirements1.json
 
 expirement:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)

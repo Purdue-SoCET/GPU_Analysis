@@ -51,20 +51,20 @@ def find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs):
 
 		if(prev_tmask != tmask):
 			if(is_tid_on(prev_tmask, tid)):
-				split_instr = instrs[idx]
+				# split_instr = instrs[idx]
 
-				if split_instr not in div_instrs.keys():
-					new_dict_entry = {split_instr: 0}
-					div_instrs.update(new_dict_entry)
+				# if split_instr not in div_instrs.keys():
+				# 	new_dict_entry = {split_instr: 0}
+				# 	div_instrs.update(new_dict_entry)
 				
-				div_instrs[split_instr] += 1
+				# div_instrs[split_instr] += 1
 
-				if(split_instr in allowed_div_instr):
-					reconverge_tmask = prev_tmask
-					is_split = 1
-					break
-				else:
-					break
+				# if(split_instr in allowed_div_instr):
+				reconverge_tmask = prev_tmask
+				is_split = 1
+				break
+				# else:
+				# 	break
 			
 			idx -= 1
 		
@@ -283,7 +283,7 @@ if __name__ == "__main__":
 	num_threads = 32
 
 	convergent_mask = "" 
-	in_kernel = 0
+	in_kernel = 1
 
 	# Read from run.log
 	try:
@@ -293,8 +293,7 @@ if __name__ == "__main__":
 			line = file.readline()
 		
 			config_pattern = r"-gpgpu_shader_core_pipeline              ([0-9]+):([0-9]+)"
-			tmask_pattern = r"DEBUG Fetch: cid=([0-9]+), wid=([0-9]+), tmask=([1|0]+), PC=0x([0-9a-f]+) \((#[0-9]+)\)"
-			instr_pattern = r"DEBUG Instr 0x(.+): ([A-Z]+[.]?([A-Z])*) (.*)"
+			tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), active_mask=((0|1)+)"
 			end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
 
 			if(re.search(config_pattern,line)):
@@ -315,26 +314,26 @@ if __name__ == "__main__":
 					convergent_mask += "1"
 
 			if(re.search(tmask_pattern,line)):
-				core_id = re.search(tmask_pattern,line).group(1)
-				warp_id = re.search(tmask_pattern,line).group(2)
+				warp_id = re.search(tmask_pattern,line).group(1)
+				core_id = re.search(tmask_pattern,line).group(2)
 				tmask = re.search(tmask_pattern,line).group(3)
-				ids1  = re.search(tmask_pattern,line).group(5)
+				# ids1  = re.search(tmask_pattern,line).group(5)
 				
-				instr_line = file.readline()
-				instr = re.search(instr_pattern,instr_line).group(2)
+				# instr_line = file.readline()
+				# instr = re.search(instr_pattern,instr_line).group(2)
 				
 				# Once we see a mask with all 1s, then we have entered the kernel
-				if(tmask == convergent_mask and core_id == "0" and warp_id == "0"):
-					in_kernel = 1
+				# if(tmask == convergent_mask and core_id == "0" and warp_id == "0"):
+				# 	in_kernel = 1
 
 				# End of kernel and return to scheduler (Not applicable to kernels that use TMC, like BFS)
 				# if(instr == "TMC"): 
 				# 	in_kernel = 0
 
-				if(in_kernel and core_id == "0"):
+				if(core_id == "0"):
 					warps_tmasks[warp_id].append(tmask)
-					warps_instrs[warp_id].append(instr)
-					warps_ids[warp_id].append(ids1)
+					# warps_instrs[warp_id].append(instr)
+					# warps_ids[warp_id].append(ids1)
 
 			if(re.search(end_pattern,line)):
 				break
@@ -402,7 +401,7 @@ if __name__ == "__main__":
 					scalarize_t0 = 1
 
 				else:
-					scalarize_t0 = 0
+					scalarize_t0 = 1
 
 				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur = sat_counters(tmasks, instrs, scalarize_t0, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
 				num_scalarizations = 0
