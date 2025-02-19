@@ -1,7 +1,7 @@
-SOURCE_FILE := runs/out.txt
-DEST_FILE := expirements1.json
+SOURCE_FILE := runs/gaussian.txt
+DEST_FILE := gaussian.json
 
-expirement:
+experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
 
 plot:

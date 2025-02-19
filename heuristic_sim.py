@@ -345,8 +345,8 @@ if __name__ == "__main__":
 		print(instr_line)
 		print("Error opening the log file f'{source}")
 
-	thetas = range(10, 2000, 100)
-	num_scalars = range(1, 9)
+	thetas = [200]#range(10, 2000, 100)
+	num_scalars = [1]#range(1, 9)
 	capacity = 16
 	
 	expirement = {}
@@ -494,6 +494,6 @@ if __name__ == "__main__":
 			progress = number_of_expirements_done / num_expirements
 			print(f"\rExpirement Progress: {progress*100:.0f}%", end="")
 
-	exit()
+	# exit()
 	with open(results_file, "w") as f:
 		json.dump(expirement, f)
