@@ -5,7 +5,7 @@ expirement:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
 
 plot:
-	python3 plot.py
+	python3 plot.py $(DEST_FILE)
 
 clean_images:
 	@rm plots/*.png

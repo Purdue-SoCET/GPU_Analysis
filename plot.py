@@ -1,9 +1,10 @@
 import json
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 if __name__ == "__main__":
-    source_file = "expirements.json"
+    source_file = sys.argv[1]
     expirements = {}
 
     num_scalar_idx              = 0
