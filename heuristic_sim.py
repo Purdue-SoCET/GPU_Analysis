@@ -293,25 +293,29 @@ if __name__ == "__main__":
 			line = file.readline()
 		
 			config_pattern = r"-gpgpu_shader_core_pipeline              ([0-9]+):([0-9]+)"
+			warp_num_pattern = r"Start warp ([0-9]+) and end warp ([0-9]+)"
 			tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), active_mask=((0|1)+)"
 			end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
 
 			if(re.search(config_pattern,line)):
 				total_num_threads = int(re.search(config_pattern,line).group(1))
 				num_threads = int(re.search(config_pattern,line).group(2))
-				# num_warps = total_num_threads / num_threads
-				num_warps = 32
+		
+				for i in range(num_threads):
+					convergent_mask += "1"
 
+			if(re.search(warp_num_pattern,line)):
+				start_warp = int(re.search(warp_num_pattern,line).group(1))
+				end_warp = int(re.search(warp_num_pattern,line).group(2))
+				num_warps = end_warp-start_warp+1
+				
 				warps_to_probe = ["0" for _ in range(num_warps)]
-				for i in range(num_warps):
+				for i in range(start_warp,end_warp+1):
 					warps_to_probe[i] = str(int(warps_to_probe[0]) + i)
 					warps_tmasks[warps_to_probe[i]] = []
 					warps_instrs[warps_to_probe[i]] = []
 					warps_ids[warps_to_probe[i]] 	= []
 					warps_stats[warps_to_probe[i]] 	= []
-		
-				for i in range(num_threads):
-					convergent_mask += "1"
 
 			if(re.search(tmask_pattern,line)):
 				warp_id = re.search(tmask_pattern,line).group(1)
