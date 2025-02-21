@@ -307,16 +307,17 @@ if __name__ == "__main__":
 			if(re.search(warp_num_pattern,line)):
 				start_warp = int(re.search(warp_num_pattern,line).group(1))
 				end_warp = int(re.search(warp_num_pattern,line).group(2))
-				print(f"{start_warp}, {end_warp}\n")	# DEBUGGING: warp start, warp end
+				# print(f"{start_warp}, {end_warp}\n")	# DEBUGGING: warp start, warp end
 				num_warps = end_warp-start_warp+1
 				
 				warps_to_probe = ["0" for _ in range(num_warps)]
 				for i in range(start_warp,end_warp+1):
 					warps_to_probe[i] = str(int(warps_to_probe[0]) + i)
-					warps_tmasks[warps_to_probe[i]] = []
-					warps_instrs[warps_to_probe[i]] = []
-					warps_ids[warps_to_probe[i]] 	= []
-					warps_stats[warps_to_probe[i]] 	= []
+					if(warps_to_probe[i] not in warps_tmasks.keys()):
+						warps_tmasks[warps_to_probe[i]] = []
+						warps_instrs[warps_to_probe[i]] = []
+						warps_ids[warps_to_probe[i]] 	= []
+						warps_stats[warps_to_probe[i]] 	= []
 
 			if(re.search(tmask_pattern,line)):
 				warp_id = re.search(tmask_pattern,line).group(1)
