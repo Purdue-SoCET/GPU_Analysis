@@ -501,5 +501,6 @@ if __name__ == "__main__":
 			print(f"\rExpirement Progress: {progress*100:.0f}%", end="")
 
 	# exit()
+	print("") # Just to add seperation from expirement progress bar and terminal prefix
 	with open(results_file, "w") as f:
 		json.dump(expirement, f)
