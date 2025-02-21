@@ -307,6 +307,7 @@ if __name__ == "__main__":
 			if(re.search(warp_num_pattern,line)):
 				start_warp = int(re.search(warp_num_pattern,line).group(1))
 				end_warp = int(re.search(warp_num_pattern,line).group(2))
+				print(f"{start_warp}, {end_warp}\n")	# DEBUGGING: warp start, warp end
 				num_warps = end_warp-start_warp+1
 				
 				warps_to_probe = ["0" for _ in range(num_warps)]

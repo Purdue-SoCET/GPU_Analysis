@@ -3,7 +3,7 @@ self exe links to: /home/asicfab/a/mathur63/gpgpu-sim_distribution/test/rodinia_
 11.0
 
 
-        *** GPGPU-Sim Simulator Version 4.2.0  [build gpgpu-sim_git-commit-89b321d_modified_2.0] ***
+        *** GPGPU-Sim Simulator Version 4.2.0  [build gpgpu-sim_git-commit-ee4c233_modified_0.1499] ***
 
 
 GPGPU-Sim PTX: simulation mode 0 (can change with PTX_SIM_MODE_FUNC environment variable:
@@ -239,7 +239,7 @@ GPGPU-Sim: Configuration options:
 DRAM Timing Options:
 nbk                                    16 # number of banks
 CCD                                     1 # column to column delay
-RRD                              abe2302891116bea38120895f4169777  /home/asicfab/a/mathur63/gpgpu-sim_distribution/test/rodinia_3.1/cuda/gaussian/gaussian
+RRD                              11d1a7c25d4178a5a6192191db123e76  /home/asicfab/a/mathur63/gpgpu-sim_distribution/test/rodinia_3.1/cuda/gaussian/gaussian
 Extracting PTX file and ptxas options    1: gaussian.1.sm_52.ptx -arch=sm_52
        3 # minimal delay between activation of rows in different banks
 RCD                                    12 # row to column delay
@@ -264,12 +264,52 @@ GPGPU-Sim uArch: clock freqs: 1200000000.000000:1200000000.000000:1200000000.000
 GPGPU-Sim uArch: clock periods: 0.00000000083333333333:0.00000000083333333333:0.00000000083333333333:0.00000000117647058824
 *** Initializing Memory Statistics ***
 GPGPU-Sim uArch: performance model initialization complete.
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
+Number of shader cores being initialized: 2
 GPGPU-Sim PTX: __cudaRegisterFatBinary, fat_cubin_handle = 1, filename=default
 self exe links to: /home/asicfab/a/mathur63/gpgpu-sim_distribution/test/rodinia_3.1/cuda/gaussian/gaussian
 Running md5sum using "md5sum /home/asicfab/a/mathur63/gpgpu-sim_distribution/test/rodinia_3.1/cuda/gaussian/gaussian "
 self exe links to: /home/asicfab/a/mathur63/gpgpu-sim_distribution/test/rodinia_3.1/cuda/gaussian/gaussian
 Extracting specific PTX file named gaussian.1.sm_52.ptx 
-GPGPU-Sim PTX: __cudaRegisterFunction _Z4Fan2PfS_S_iii : hostFun 0x0x5591de29fc98, fat_cubin_handle = 1
+GPGPU-Sim PTX: __cudaRegisterFunction _Z4Fan2PfS_S_iii : hostFun 0x0x562c0eb5fc98, fat_cubin_handle = 1
 GPGPU-Sim PTX: Parsing gaussian.1.sm_52.ptx
 GPGPU-Sim PTX: instruction assembly for function '_Z4Fan1PfS_ii'...   done.
 GPGPU-Sim PTX: instruction assembly for function '_Z4Fan2PfS_S_iii'...   done.
@@ -280,15 +320,15 @@ GPGPU-Sim PTX: loading constants with explicit initializers...  done.
 GPGPU-Sim PTX: Loading PTXInfo from gaussian.1.sm_52.ptx
 GPGPU-Sim PTX: Kernel '_Z4Fan2PfS_S_iii' : regs=12, lmem=0, smem=0, cmem=356
 GPGPU-Sim PTX: Kernel '_Z4Fan1PfS_ii' : regs=14, lmem=0, smem=0, cmem=356
-GPGPU-Sim PTX: __cudaRegisterFunction _Z4Fan1PfS_ii : hostFun 0x0x5591de29fab7, fat_cubin_handle = 1
+GPGPU-Sim PTX: __cudaRegisterFunction _Z4Fan1PfS_ii : hostFun 0x0x562c0eb5fab7, fat_cubin_handle = 1
 WG size of kernel 1 = 512, WG size of kernel 2= 4 X 4
 Read file from matrix4.txt 
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913f8..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913f0..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913ec..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913e8..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a28..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a20..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d1a1c..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d1a18..
 
-GPGPU-Sim PTX: cudaLaunch for 0x0x5591de29fab7 (mode=performance simulation) on stream 0
+GPGPU-Sim PTX: cudaLaunch for 0x0x562c0eb5fab7 (mode=performance simulation) on stream 0
 GPGPU-Sim PTX: finding reconvergence points for '_Z4Fan1PfS_ii'...
 GPGPU-Sim PTX: Finding dominators for '_Z4Fan1PfS_ii'...
 GPGPU-Sim PTX: Finding immediate dominators for '_Z4Fan1PfS_ii'...
@@ -304,6 +344,7 @@ GPGPU-Sim PTX: pushing kernel '_Z4Fan1PfS_ii' to stream 0, gridDim= (1,1,1) bloc
 GPGPU-Sim uArch: Shader 0 bind to kernel 1 '_Z4Fan1PfS_ii'
 GPGPU-Sim uArch: CTA/core = 4, limited by: threads
 GPGPU-Sim: Reconfigure L1 cache to 128KB
+Start warp 0 and end warp 15
 warp_id=1, core_id=0, active_mask=11111111111111111111111111111111
 warp_id=2, core_id=0, active_mask=11111111111111111111111111111111
 warp_id=3, core_id=0, active_mask=11111111111111111111111111111111
@@ -2795,14 +2836,14 @@ gpgpu_silicon_slowdown = 1536491x
 GPGPU-Sim: synchronize waiting for inactive GPU simulation
 GPGPU-Sim API: Stream Manager State
 GPGPU-Sim: detected inactive GPU simulation thread
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913d8..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913d0..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913c8..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913c4..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913c0..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913bc..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a08..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a00..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d19f8..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19f4..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19f0..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19ec..
 
-GPGPU-Sim PTX: cudaLaunch for 0x0x5591de29fc98 (mode=performance simulation) on stream 0
+GPGPU-Sim PTX: cudaLaunch for 0x0x562c0eb5fc98 (mode=performance simulation) on stream 0
 GPGPU-Sim PTX: finding reconvergence points for '_Z4Fan2PfS_S_iii'...
 GPGPU-Sim PTX: Finding dominators for '_Z4Fan2PfS_S_iii'...
 GPGPU-Sim PTX: Finding immediate dominators for '_Z4Fan2PfS_S_iii'...
@@ -2822,6 +2863,7 @@ GPGPU-Sim PTX: pushing kernel '_Z4Fan2PfS_S_iii' to stream 0, gridDim= (1,1,1) b
 GPGPU-Sim uArch: Shader 2 bind to kernel 2 '_Z4Fan2PfS_S_iii'
 GPGPU-Sim uArch: CTA/core = 32, limited by: cta_limit
 GPGPU-Sim: Reconfigure L1 cache to 128KB
+Start warp 0 and end warp 0
 warp_id=0, core_id=2, active_mask=00000000000000001111111111111111
 warp_id=0, core_id=2, active_mask=00000000000000001111111111111111
 warp_id=0, core_id=2, active_mask=00000000000000001111111111111111
@@ -5146,17 +5188,18 @@ gpgpu_silicon_slowdown = 656096x
 GPGPU-Sim: synchronize waiting for inactive GPU simulation
 GPGPU-Sim API: Stream Manager State
 GPGPU-Sim: detected inactive GPU simulation thread
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913f8..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913f0..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913ec..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913e8..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a28..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a20..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d1a1c..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d1a18..
 
-GPGPU-Sim PTX: cudaLaunch for 0x0x5591de29fab7 (mode=performance simulation) on stream 0
+GPGPU-Sim PTX: cudaLaunch for 0x0x562c0eb5fab7 (mode=performance simulation) on stream 0
 GPGPU-Sim PTX: PDOM analysis already done for _Z4Fan1PfS_ii 
 GPGPU-Sim PTX: pushing kernel '_Z4Fan1PfS_ii' to stream 0, gridDim= (1,1,1) blockDim = (512,1,1) 
 GPGPU-Sim uArch: Shader 4 bind to kernel 3 '_Z4Fan1PfS_ii'
 GPGPU-Sim uArch: CTA/core = 4, limited by: threads
 GPGPU-Sim: Reconfigure L1 cache to 128KB
+Start warp 0 and end warp 15
 warp_id=1, core_id=4, active_mask=11111111111111111111111111111111
 warp_id=2, core_id=4, active_mask=11111111111111111111111111111111
 warp_id=3, core_id=4, active_mask=11111111111111111111111111111111
@@ -5388,7 +5431,7 @@ warp_id=0, core_id=4, active_mask=11111111111111111111111111111111
 Destroy streams for kernel 3: size 0
 kernel_name = _Z4Fan1PfS_ii 
 kernel_launch_uid = 3 
-kernel_stream_id = 94085618048912
+kernel_stream_id = 94748388466576
 gpu_sim_cycle = 779
 gpu_sim_insn = 6694
 gpu_ipc =       8.5931
@@ -7651,19 +7694,20 @@ gpgpu_silicon_slowdown = 460122x
 GPGPU-Sim: synchronize waiting for inactive GPU simulation
 GPGPU-Sim API: Stream Manager State
 GPGPU-Sim: detected inactive GPU simulation thread
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913d8..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913d0..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913c8..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913c4..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913c0..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913bc..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a08..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a00..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d19f8..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19f4..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19f0..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19ec..
 
-GPGPU-Sim PTX: cudaLaunch for 0x0x5591de29fc98 (mode=performance simulation) on stream 0
+GPGPU-Sim PTX: cudaLaunch for 0x0x562c0eb5fc98 (mode=performance simulation) on stream 0
 GPGPU-Sim PTX: PDOM analysis already done for _Z4Fan2PfS_S_iii 
 GPGPU-Sim PTX: pushing kernel '_Z4Fan2PfS_S_iii' to stream 0, gridDim= (1,1,1) blockDim = (4,4,1) 
 GPGPU-Sim uArch: Shader 6 bind to kernel 4 '_Z4Fan2PfS_S_iii'
 GPGPU-Sim uArch: CTA/core = 32, limited by: cta_limit
 GPGPU-Sim: Reconfigure L1 cache to 128KB
+Start warp 0 and end warp 0
 warp_id=0, core_id=6, active_mask=00000000000000001111111111111111
 warp_id=0, core_id=6, active_mask=00000000000000001111111111111111
 warp_id=0, core_id=6, active_mask=00000000000000001111111111111111
@@ -7725,7 +7769,7 @@ warp_id=0, core_id=6, active_mask=00000000000000001111111111111111
 Destroy streams for kernel 4: size 0
 kernel_name = _Z4Fan2PfS_S_iii 
 kernel_launch_uid = 4 
-kernel_stream_id = 94085618049440
+kernel_stream_id = 94748388467104
 gpu_sim_cycle = 1047
 gpu_sim_insn = 444
 gpu_ipc =       0.4241
@@ -9988,17 +10032,18 @@ gpgpu_silicon_slowdown = 328317x
 GPGPU-Sim: synchronize waiting for inactive GPU simulation
 GPGPU-Sim API: Stream Manager State
 GPGPU-Sim: detected inactive GPU simulation thread
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913f8..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913f0..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913ec..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913e8..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a28..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a20..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d1a1c..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d1a18..
 
-GPGPU-Sim PTX: cudaLaunch for 0x0x5591de29fab7 (mode=performance simulation) on stream 0
+GPGPU-Sim PTX: cudaLaunch for 0x0x562c0eb5fab7 (mode=performance simulation) on stream 0
 GPGPU-Sim PTX: PDOM analysis already done for _Z4Fan1PfS_ii 
 GPGPU-Sim PTX: pushing kernel '_Z4Fan1PfS_ii' to stream 0, gridDim= (1,1,1) blockDim = (512,1,1) 
 GPGPU-Sim uArch: Shader 8 bind to kernel 5 '_Z4Fan1PfS_ii'
 GPGPU-Sim uArch: CTA/core = 4, limited by: threads
 GPGPU-Sim: Reconfigure L1 cache to 128KB
+Start warp 0 and end warp 15
 warp_id=1, core_id=8, active_mask=11111111111111111111111111111111
 warp_id=2, core_id=8, active_mask=11111111111111111111111111111111
 warp_id=3, core_id=8, active_mask=11111111111111111111111111111111
@@ -10230,7 +10275,7 @@ warp_id=0, core_id=8, active_mask=11111111111111111111111111111111
 Destroy streams for kernel 5: size 0
 kernel_name = _Z4Fan1PfS_ii 
 kernel_launch_uid = 5 
-kernel_stream_id = 94085618049968
+kernel_stream_id = 94748388467632
 gpu_sim_cycle = 779
 gpu_sim_insn = 6675
 gpu_ipc =       8.5687
@@ -12493,19 +12538,20 @@ gpgpu_silicon_slowdown = 270635x
 GPGPU-Sim: synchronize waiting for inactive GPU simulation
 GPGPU-Sim API: Stream Manager State
 GPGPU-Sim: detected inactive GPU simulation thread
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913d8..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913d0..
-GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7ffeeb0913c8..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913c4..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913c0..
-GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7ffeeb0913bc..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a08..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d1a00..
+GPGPU-Sim PTX: Setting up arguments for 8 bytes starting at 0x7fff690d19f8..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19f4..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19f0..
+GPGPU-Sim PTX: Setting up arguments for 4 bytes starting at 0x7fff690d19ec..
 
-GPGPU-Sim PTX: cudaLaunch for 0x0x5591de29fc98 (mode=performance simulation) on stream 0
+GPGPU-Sim PTX: cudaLaunch for 0x0x562c0eb5fc98 (mode=performance simulation) on stream 0
 GPGPU-Sim PTX: PDOM analysis already done for _Z4Fan2PfS_S_iii 
 GPGPU-Sim PTX: pushing kernel '_Z4Fan2PfS_S_iii' to stream 0, gridDim= (1,1,1) blockDim = (4,4,1) 
 GPGPU-Sim uArch: Shader 10 bind to kernel 6 '_Z4Fan2PfS_S_iii'
 GPGPU-Sim uArch: CTA/core = 32, limited by: cta_limit
 GPGPU-Sim: Reconfigure L1 cache to 128KB
+Start warp 0 and end warp 0
 warp_id=0, core_id=10, active_mask=00000000000000001111111111111111
 warp_id=0, core_id=10, active_mask=00000000000000001111111111111111
 warp_id=0, core_id=10, active_mask=00000000000000001111111111111111
@@ -12567,7 +12613,7 @@ warp_id=0, core_id=10, active_mask=00000000000000001111111111111111
 Destroy streams for kernel 6: size 0
 kernel_name = _Z4Fan2PfS_S_iii 
 kernel_launch_uid = 6 
-kernel_stream_id = 94085618050496
+kernel_stream_id = 94748388468160
 gpu_sim_cycle = 878
 gpu_sim_insn = 320
 gpu_ipc =       0.3645
@@ -14849,6 +14895,6 @@ The final solution is:
 0.70 0.00 -0.40 -0.50 
 
 
-Time total (including memory transfers)	1.229467 sec
-Time for CUDA kernels:	1.223955 sec
+Time total (including memory transfers)	1.530741 sec
+Time for CUDA kernels:	1.524018 sec
 GPGPU-Sim: *** exit detected ***
