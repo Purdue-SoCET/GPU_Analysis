@@ -1,5 +1,5 @@
-SOURCE_FILE := runs/gaussian.txt
-DEST_FILE := gaussian.json
+SOURCE_FILE := runs/mmul.txt
+DEST_FILE := mmul.json
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
