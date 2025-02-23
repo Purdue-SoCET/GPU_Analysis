@@ -1,5 +1,5 @@
-SOURCE_FILE := runs/mmul.txt
-DEST_FILE := mmul.json
+SOURCE_FILE := runs/heartwall.txt
+DEST_FILE := jsons/heartwall.json
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
