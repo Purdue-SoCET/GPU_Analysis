@@ -5,6 +5,7 @@ import sys
 
 if __name__ == "__main__":
     source_file = sys.argv[1]
+    dest_folder = sys.argv[2]
     expirements = {}
 
     num_scalar_idx              = 0
@@ -122,7 +123,7 @@ if __name__ == "__main__":
         # plt.text(knee_list[0][1], knee_list[0][0], f'({knee_list[0][1]}, {knee_list[0][0]:.2f})')
 
     plt.legend()
-    plt.savefig(f'plots/avg_speed_ups.png')
+    plt.savefig(f'{dest_folder}/avg_speed_ups.png')
     plt.close()
 
 
@@ -204,7 +205,7 @@ if __name__ == "__main__":
         # plt.text(knee_list[0][1], knee_list[0][0], f'({knee_list[0][1]}, {knee_list[0][0]:.2f})')
 
     plt.legend()
-    plt.savefig(f'plots/avg_diff_simd_efficiency.png')
+    plt.savefig(f'{dest_folder}/avg_diff_simd_efficiency.png')
     plt.close()
 
     for num_scalar in num_scalar_data.keys():
@@ -280,7 +281,7 @@ if __name__ == "__main__":
         plt.title(f'Scalarization Bandwidth: {num_scalar}')
         plt.plot(knee_list[0][1], knee_list[0][0], 'ro')
         plt.text(knee_list[0][1], knee_list[0][0], f'({knee_list[0][1]}, {knee_list[0][0]:.2f})')
-        plt.savefig(f'plots/avg_pct_cycles_saved_{num_scalar}.png')
+        plt.savefig(f'{dest_folder}/avg_pct_cycles_saved_{num_scalar}.png')
         plt.close()
 
 
@@ -288,21 +289,21 @@ if __name__ == "__main__":
         plt.xlabel("Saturation Limit")
         plt.ylabel("Percentage of Non-Split Divergence")
         plt.title(f'Scalarization Bandwidth: {num_scalar}')
-        plt.savefig(f'plots/avg_pct_non_split_div_{num_scalar}.png')
+        plt.savefig(f'{dest_folder}/avg_pct_non_split_div_{num_scalar}.png')
         plt.close()
 
         plt.plot(thetas, avg_max_ocp)
         plt.xlabel("Saturation Limit")
         plt.ylabel("Max Occupancy")
         plt.title(f'Scalarization Bandwidth: {num_scalar}')
-        plt.savefig(f'plots/avg_max_ocp_{num_scalar}.png')
+        plt.savefig(f'{dest_folder}/avg_max_ocp_{num_scalar}.png')
         plt.close()
 
         plt.plot(thetas, avg_pct_max_cap)
         plt.xlabel("Saturation Limit")
         plt.ylabel("Percentage of Max Capacity Reached")
         plt.title(f'Scalarization Bandwidth: {num_scalar}')
-        plt.savefig(f'plots/avg_pct_max_cap_{num_scalar}.png')
+        plt.savefig(f'{dest_folder}/avg_pct_max_cap_{num_scalar}.png')
         plt.close()
 
         plt.plot(thetas, avg_num_scalarizations)
@@ -311,7 +312,7 @@ if __name__ == "__main__":
         plt.title(f'Scalarization Bandwidth: {num_scalar}')
         plt.plot(knee_list[1][1], knee_list[1][0], 'ro')
         plt.text(knee_list[1][1], knee_list[1][0], f'({knee_list[1][1]}, {knee_list[1][0]:.2f})')
-        plt.savefig(f'plots/avg_num_scalarizations_{num_scalar}.png')
+        plt.savefig(f'{dest_folder}/avg_num_scalarizations_{num_scalar}.png')
         plt.close()
 
     print("***********************")
