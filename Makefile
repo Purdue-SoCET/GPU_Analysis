@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/mmul.txt
-DEST_FILE := jsons/mmul.json
-PLOTS_SUB_DIR := plots/mmul
+SOURCE_FILE := runs/old_bfs.txt
+DEST_FILE := jsons/old_bfs.json
+PLOTS_SUB_DIR := plots/old_bfs
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
