@@ -281,6 +281,7 @@ if __name__ == "__main__":
 	warps_ids	 = {}
 	warps_stats	 = {}
 	num_threads = 32
+	warps_to_probe = {}
 
 	convergent_mask = "" 
 	in_kernel = 1
@@ -307,12 +308,10 @@ if __name__ == "__main__":
 			if(re.search(warp_num_pattern,line)):
 				start_warp = int(re.search(warp_num_pattern,line).group(1))
 				end_warp = int(re.search(warp_num_pattern,line).group(2))
-				# print(f"{start_warp}, {end_warp}\n")	# DEBUGGING: warp start, warp end
-				num_warps = end_warp-start_warp+1
 				
-				warps_to_probe = ["0" for _ in range(num_warps)]
+				# warps_to_probe = ["0" for _ in range(start_warp,end_warp+1)]
 				for i in range(start_warp,end_warp+1):
-					warps_to_probe[i] = str(int(warps_to_probe[0]) + i)
+					warps_to_probe[i] = str(i)
 					if(warps_to_probe[i] not in warps_tmasks.keys()):
 						warps_tmasks[warps_to_probe[i]] = []
 						warps_instrs[warps_to_probe[i]] = []
@@ -351,6 +350,8 @@ if __name__ == "__main__":
 		print(instr_line)
 		print("Error opening the log file f'{source}")
 
+	num_warps = len(warps_to_probe.keys())
+
 	thetas = range(10, 2000, 100)
 	num_scalars = range(1, 9)
 	capacity = 16
@@ -374,7 +375,7 @@ if __name__ == "__main__":
 			avg_pct_max_cap = 0
 			avg_num_scalarizations = 0
 			avg_num_reconvergences = 0
-			for warp_id in warps_to_probe:
+			for warp_id in warps_to_probe.values():
 
 				tmask_profile = [0]*num_threads
 

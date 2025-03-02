@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/heartwall.txt
-DEST_FILE := jsons/heartwall.json
-PLOTS_SUB_DIR := plots/heartwall
+SOURCE_FILE := runs/mmul.txt
+DEST_FILE := jsons/mmul.json
+PLOTS_SUB_DIR := plots/mmul
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
