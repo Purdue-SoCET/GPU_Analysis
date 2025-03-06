@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/old_bfs.txt
-DEST_FILE := jsons/old_bfs.json
-PLOTS_SUB_DIR := plots/old_bfs
+SOURCE_FILE := runs/lavaMD.txt
+DEST_FILE := jsons/lavaMD.json
+PLOTS_SUB_DIR := plots/lavaMD
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
