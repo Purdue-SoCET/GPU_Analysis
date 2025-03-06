@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/b+tree.txt
-DEST_FILE := jsons/b+tree.json
-PLOTS_SUB_DIR := plots/b+tree
+SOURCE_FILE := runs/nw.txt
+DEST_FILE := jsons/nw.json
+PLOTS_SUB_DIR := plots/nw
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
