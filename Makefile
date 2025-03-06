@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/lavaMD.txt
-DEST_FILE := jsons/lavaMD.json
-PLOTS_SUB_DIR := plots/lavaMD
+SOURCE_FILE := runs/b+tree.txt
+DEST_FILE := jsons/b+tree.json
+PLOTS_SUB_DIR := plots/b+tree
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
