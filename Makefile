@@ -10,7 +10,7 @@ plot:
 	python3 plot.py $(DEST_FILE) $(PLOTS_SUB_DIR)
 
 clean_images:
-	@rm -rf plots/*
+	@rm -rf $(PLOTS_SUB_DIR)/*
 
 clean_data:
 	@rm *.json
