@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/pathfinder.txt
-DEST_FILE := jsons/pathfinder.json
-PLOTS_SUB_DIR := plots/pathfinder
+SOURCE_FILE := runs/hotspot_PC.txt
+DEST_FILE := jsons/hotspot_PC.json
+PLOTS_SUB_DIR := plots/hotspot_PC
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)

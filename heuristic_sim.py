@@ -276,74 +276,113 @@ if __name__ == "__main__":
 	source_file = sys.argv[1]
 	results_file = sys.argv[2]
 
-	warps_tmasks = {}
-	warps_instrs = {}
-	warps_ids	 = {}
-	warps_stats	 = {}
-	num_threads = 32
+	warps_tmasks   = {}
+	warps_instrs   = {}
+	warps_ids	   = {}
+	warps_stats	   = {}
+	num_threads    = 32
 	warps_to_probe = {}
+
+	# needed for IPDOM analysis - Shrey
+	ipdom_analysis = {}	# list of divergent and reconvergence PCs - Shrey
+	pc_pairs       = []	# list of divergent and reconvergence PC pairs - Shrey
+	scalarize_pcs  = {}	# list of PCs that need to be scalarized (fall in divergence range) - Shrey
+	temp_branch_pc = None
 
 	convergent_mask = "" 
 	in_kernel = 1
 
 	# Read from run.log
 	try:
-		file = open(source_file, 'r', errors="ignore")
-
-		while True:
-			line = file.readline()
+		with open(source_file, 'r', errors="ignore") as file:
 		
-			config_pattern = r"-gpgpu_shader_core_pipeline              ([0-9]+):([0-9]+)"
-			warp_num_pattern = r"Start warp ([0-9]+) and end warp ([0-9]+)"
-			tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), active_mask=((0|1)+)"
-			end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
+			while True:
+				line = file.readline()
+			
+				config_pattern = r"-gpgpu_shader_core_pipeline              ([0-9]+):([0-9]+)"
+				warp_num_pattern = r"Start warp ([0-9]+) and end warp ([0-9]+)"
+				# tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), active_mask=((0|1)+)"
+				tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), pc=(0x[0-9a-fA-F]+), active_mask=([01]+)"		# regex for instruction PC - Shrey
+				end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
+				ipdom_pattern1 = r"\(potential\) branch divergence @  PC=0x([0-9a-fA-F]+)"	# regex for branch divergence PC - Shrey
+				ipdom_pattern2 = r"immediate post dominator      @  PC=0x([0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
 
-			if(re.search(config_pattern,line)):
-				total_num_threads = int(re.search(config_pattern,line).group(1))
-				num_threads = int(re.search(config_pattern,line).group(2))
+				if(re.search(config_pattern,line)):
+					total_num_threads = int(re.search(config_pattern,line).group(1))
+					num_threads = int(re.search(config_pattern,line).group(2))
+			
+					for i in range(num_threads):
+						convergent_mask += "1"
+
+				if(re.search(warp_num_pattern,line)):
+					start_warp = int(re.search(warp_num_pattern,line).group(1))
+					end_warp = int(re.search(warp_num_pattern,line).group(2))
+					
+					# warps_to_probe = ["0" for _ in range(start_warp,end_warp+1)]
+					for i in range(start_warp,end_warp+1):
+						warps_to_probe[i] = str(i)
+						if(warps_to_probe[i] not in warps_tmasks.keys()):
+							warps_tmasks[warps_to_probe[i]] = []
+							warps_instrs[warps_to_probe[i]] = []
+							warps_ids[warps_to_probe[i]] 	= []
+							warps_stats[warps_to_probe[i]] 	= []
+
+				if(re.search(tmask_pattern,line)):
+					warp_id = re.search(tmask_pattern,line).group(1)
+					core_id = re.search(tmask_pattern,line).group(2)
+					instr_pc = re.search(tmask_pattern,line).group(3)		# grab instruction PC - Shrey
+					tmask   = re.search(tmask_pattern,line).group(4)
+
+					# ids1  = re.search(tmask_pattern,line).group(5)
+					
+					# instr_line = file.readline()
+					# instr = re.search(instr_pattern,instr_line).group(2)
+					
+					# Once we see a mask with all 1s, then we have entered the kernel
+					# if(tmask == convergent_mask and core_id == "0" and warp_id == "0"):
+					# 	in_kernel = 1
+
+					# End of kernel and return to scheduler (Not applicable to kernels that use TMC, like BFS)
+					# if(instr == "TMC"): 
+					# 	in_kernel = 0
+
+					if(core_id == "0"):
+						warps_tmasks[warp_id].append(tmask)
+						# warps_instrs[warp_id].append(instr)
+						# warps_ids[warp_id].append(ids1)
+
+				# creates a list of pairs of divergent and reconvergence PCs using the IPDOM section of the log - Shrey
+				if(re.search(ipdom_pattern1,line)):
+					match_branch_div_pc = re.search(ipdom_pattern1,line)
+					if (match_branch_div_pc):
+						temp_branch_pc = match_branch_div_pc.group(1)			# store branch divergence PC temporarily - Shrey
+
+				if(re.search(ipdom_pattern2,line)):
+					match_dominator_pc = re.search(ipdom_pattern2,line)
+					if (match_dominator_pc) and (temp_branch_pc is not None):
+						dominator_pc = match_dominator_pc.group(1)				# grab ipdom reconvergence PC - Shrey
+						pc_pairs.append((temp_branch_pc, dominator_pc))			# add branch divergence and reconvergence PC pair to list - Shrey
+						temp_branch_pc = None									# reset temp_branch_pc - Shrey
+
+				# creates a dictionary of divergent and reconvergence PCs that map to PCs that fall within their range - Shrey
+				if 'instr_pc' in locals() and instr_pc is not None: 				# Ensure instr_pc exists before using it - Shrey
+					for start, end in pc_pairs:
+						if int(start, 16) <= int(instr_pc, 16) <= int(end, 16):
+							if (start, end) not in scalarize_pcs:
+								scalarize_pcs[(start, end)] = set()  			# Use a set to store unique PCs - Shrey
+							scalarize_pcs[(start, end)].add(instr_pc)  			# Add ensures uniqueness - Shrey
+
+				if(re.search(end_pattern,line)):
+					break
 		
-				for i in range(num_threads):
-					convergent_mask += "1"
-
-			if(re.search(warp_num_pattern,line)):
-				start_warp = int(re.search(warp_num_pattern,line).group(1))
-				end_warp = int(re.search(warp_num_pattern,line).group(2))
-				
-				# warps_to_probe = ["0" for _ in range(start_warp,end_warp+1)]
-				for i in range(start_warp,end_warp+1):
-					warps_to_probe[i] = str(i)
-					if(warps_to_probe[i] not in warps_tmasks.keys()):
-						warps_tmasks[warps_to_probe[i]] = []
-						warps_instrs[warps_to_probe[i]] = []
-						warps_ids[warps_to_probe[i]] 	= []
-						warps_stats[warps_to_probe[i]] 	= []
-
-			if(re.search(tmask_pattern,line)):
-				warp_id = re.search(tmask_pattern,line).group(1)
-				core_id = re.search(tmask_pattern,line).group(2)
-				tmask = re.search(tmask_pattern,line).group(3)
-				# ids1  = re.search(tmask_pattern,line).group(5)
-				
-				# instr_line = file.readline()
-				# instr = re.search(instr_pattern,instr_line).group(2)
-				
-				# Once we see a mask with all 1s, then we have entered the kernel
-				# if(tmask == convergent_mask and core_id == "0" and warp_id == "0"):
-				# 	in_kernel = 1
-
-				# End of kernel and return to scheduler (Not applicable to kernels that use TMC, like BFS)
-				# if(instr == "TMC"): 
-				# 	in_kernel = 0
-
-				if(core_id == "0"):
-					warps_tmasks[warp_id].append(tmask)
-					# warps_instrs[warp_id].append(instr)
-					# warps_ids[warp_id].append(ids1)
-
-			if(re.search(end_pattern,line)):
-				break
-
-		file.close()
+		# TESTING PURPOSES ONLY - Shrey --------------------------------
+		# print("Scalarize PCs:")
+		# for key, value in scalarize_pcs.items():
+		# 	print(f"Branch PC: {key[0]}, Reconvergence PC: {key[1]}")
+		# 	print("PCs to Scalarize:")
+		# 	for pc in value:
+		# 		print(f"  {pc}")
+		# --------------------------------------------------------------
 
 	except ValueError:
 		print(line)
@@ -364,6 +403,7 @@ if __name__ == "__main__":
 	print("Number of Expirements to be ran:", num_expirements)
 
 	for num_scalar in num_scalars:
+
 		for theta in thetas:
 			avg_speed_up = 0
 			avg_num_cycles_saved = 0
@@ -375,6 +415,7 @@ if __name__ == "__main__":
 			avg_pct_max_cap = 0
 			avg_num_scalarizations = 0
 			avg_num_reconvergences = 0
+
 			for warp_id in warps_to_probe.values():
 
 				tmask_profile = [0]*num_threads
