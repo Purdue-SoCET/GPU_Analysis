@@ -38,6 +38,7 @@ def is_tid_on(tmask, tid):
 	tmask = conv_str_to_list(tmask)
 	return tmask[tid]
 
+# THIS FUNCTION IS RENDERED USELESS AFTER NEW UPDATES
 # Finds most recent tmask where the scalarized thread has been active allowing only tmasks for SPLIT instructions
 def find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs):
 
@@ -76,12 +77,12 @@ def find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs):
 	return reconverge_tmask, is_split, div_instrs
 
 # Reconverges all threads whose reconvergence tmask matches the current tmask
-def reconverge(tmask, scalar_mask, reconverge_tmask):
+def reconverge(curr_instr_pc, scalar_mask, reconverge_pcs):
 	num_reconv = 0
 
 	for tid, scalarized in enumerate(scalar_mask):
 		if(scalarized == 1):		
-			if(reconverge_tmask[tid] == tmask):	# should check if reconv pc == current pc
+			if(reconverge_pcs[tid] == curr_instr_pc):	# should check if reconv pc == current pc
 				scalar_mask[tid] = 0
 				num_reconv += 1
 	
@@ -174,7 +175,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 	average_div_dur 	 = [0]*num_threads
 	per_thread_count     = [0]*num_threads
 	sat_counters		 = [0]*num_threads
-	reconverge_tmask	 = [""]*num_threads
+	reconverge_pcs  	 = [0]*num_threads
 	
 	for idx, tmask in enumerate(tmasks):
 		
@@ -190,6 +191,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 
 		tmask_on_simt, active_threads, result_tmask = and_scalar_mask(tmask, scalar_mask)
 		total_active_threads += active_threads
+		current_instr_pc = instrs[idx]
 
 		if tmask_on_simt == True:
 			## If not on the scalar cores
@@ -208,16 +210,15 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 						sat_counters[tid] += 1
 
 						# New 'should_scalarize' condition: check if current PC is in scalarize_pcs dict - Shrey
-						current_instr_pc = instrs[idx]
 						should_scalarize = False
 						for start_end, pcs in scalarize_pcs.items():
 							for pc in pcs:
 								if current_instr_pc in pcs:
-									# add reconvergence pc here after refactoring reconvergence_tmask
+									reconvergence_pc = start_end[1]	# reconvergence pc
 									should_scalarize = True
 									attempts_at_scalarization += 1
-									reconvergence_pcs = start_end[1]	# reconvergence pc
-									print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
+									reconverge_pcs[tid] = reconvergence_pc
+									# print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
 									break
 
 						### Check if count of the threads sat_counter reached threshold (theta)
@@ -233,7 +234,6 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 							##### If we have capacity AND instruction PC is in the scalarize_pcs dict (should_scalarize), set the tmasks status to on the scalar core and reset the counter
 
 							# reconverge_tmask[tid], is_split, div_instrs = find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs)	# repurpose reconvergence_tmask to reconvergence_pc and use it to index reconvergence pc (post dominator pc)
-							attempts_at_scalarization += 1
 
 							# if(is_split):
 							sat_counters[tid] = 0
@@ -256,7 +256,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 
 			## Check if the tmask is a reconvergence tmask for any of the threads
 			reconv_threads = 0 # Refers to the number of threads that have reconverged in this cycle
-			reconv_threads = reconverge(tmask, scalar_mask, reconverge_tmask)	# reconvergence pc NOT reconvergence tmask
+			reconv_threads = reconverge(current_instr_pc, scalar_mask, reconverge_pcs) # modified reconverge function to check if the reconvergence pc matches the current instr pc - Shrey
 
 			occupancy -= reconv_threads
 			num_reconv += reconv_threads
