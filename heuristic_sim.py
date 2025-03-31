@@ -81,7 +81,7 @@ def reconverge(tmask, scalar_mask, reconverge_tmask):
 
 	for tid, scalarized in enumerate(scalar_mask):
 		if(scalarized == 1):		
-			if(reconverge_tmask[tid] == tmask):
+			if(reconverge_tmask[tid] == tmask):	# should check if reconv pc == current pc
 				scalar_mask[tid] = 0
 				num_reconv += 1
 	
@@ -99,7 +99,7 @@ def and_scalar_mask(tmask, scalar_mask):
 		if result[i]:
 			num_act_threads += 1
 
-	return 1 in result, num_act_threads
+	return 1 in result, num_act_threads, result
 
 # Assummptions
 # 1. Infinite thread transfer bandwidth 
@@ -143,7 +143,7 @@ def and_scalar_mask(tmask, scalar_mask):
 #
 # 10. div_instrs: Dictionary of instructions associated with a possible reconvergence tmask for a given thread. (e.g. want to scalarize a thread but the last tmask where it was active had instr PRED.N so we don't scalarize it but increment the PRED.N entry in the dictionary)
 
-def sat_counters(tmasks, instrs, scalarize_t0, theta=1000, num_threads=32, capacity=32, num_scalar=1):
+def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_threads=32, capacity=32, num_scalar=1):
 	# Baseline number of cycles executed on vortex GPU
 	total_cycles         = len(tmasks)
 	sim_cycles			 = 0
@@ -177,32 +177,48 @@ def sat_counters(tmasks, instrs, scalarize_t0, theta=1000, num_threads=32, capac
 	reconverge_tmask	 = [""]*num_threads
 	
 	for idx, tmask in enumerate(tmasks):
+		
+		# debugging only
 		if(check_tmasks):
 			check_tmasks_list.append(tmask)	
 		# Check if tmask is on the scalar core or not
 
+		# count number of cycles a thread is on the scalar mask (how many cycles it's divergent for)
 		for idxs, bit in enumerate(scalar_mask):
 			if (bit):
 				average_div_dur[idxs] += 1
 
-		tmask_on_simt, active_threads = and_scalar_mask(tmask, scalar_mask)
+		tmask_on_simt, active_threads, result_tmask = and_scalar_mask(tmask, scalar_mask)
 		total_active_threads += active_threads
 
 		if tmask_on_simt == True:
 			## If not on the scalar cores
-
 			## Check if tmask count is in the range of numbers from 0-scalar_threads (T)
 			
-			tmask_vector = conv_str_to_list(tmask) # Turn tmask string into bit vector
+			# tmask_vector = conv_str_to_list(tmask) # Turn tmask string into bit vector
+			tmask_vector = result_tmask
 			acceptable_num_scalar = list(range(1,num_scalar+1))
-			
+
 			if(count_active_threads(tmask_vector) in acceptable_num_scalar):
-				### If so increment the coressponding thread's saturating counter 
+				### If so increment the coresponding thread's saturating counter 
 				tids = get_tid(tmask_vector, num_scalar)
 				
 				for tid in tids:
 					if(tid != None):
 						sat_counters[tid] += 1
+
+						# New 'should_scalarize' condition: check if current PC is in scalarize_pcs dict - Shrey
+						current_instr_pc = instrs[idx]
+						should_scalarize = False
+						for start_end, pcs in scalarize_pcs.items():
+							for pc in pcs:
+								if current_instr_pc in pcs:
+									# add reconvergence pc here after refactoring reconvergence_tmask
+									should_scalarize = True
+									attempts_at_scalarization += 1
+									reconvergence_pcs = start_end[1]	# reconvergence pc
+									print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
+									break
 
 						### Check if count of the threads sat_counter reached threshold (theta)
 						### If so check the capacity 
@@ -212,34 +228,35 @@ def sat_counters(tmasks, instrs, scalarize_t0, theta=1000, num_threads=32, capac
 						if(sat_counters[tid] >= theta and occupancy >= capacity and (scalarize_t0 or (not scalarize_t0 and not(tid == 0)))):
 							num_occupancy_full += 1
 
-						if(sat_counters[tid] >= theta and occupancy < capacity and (scalarize_t0 or (not scalarize_t0 and not(tid == 0)))):
-							##### If we have capacity set the tmasks status to on the scalar core and reset the counter
-							
-							reconverge_tmask[tid], is_split, div_instrs = find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs)
+						# MODIFIED SCALARIZATION CONDITION - Shrey
+						if(should_scalarize and sat_counters[tid] >= theta and occupancy < capacity and (scalarize_t0 or (not scalarize_t0 and not(tid == 0)))):
+							##### If we have capacity AND instruction PC is in the scalarize_pcs dict (should_scalarize), set the tmasks status to on the scalar core and reset the counter
+
+							# reconverge_tmask[tid], is_split, div_instrs = find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs)	# repurpose reconvergence_tmask to reconvergence_pc and use it to index reconvergence pc (post dominator pc)
 							attempts_at_scalarization += 1
 
-							if(is_split):
-								sat_counters[tid] = 0
+							# if(is_split):
+							sat_counters[tid] = 0
 
-								occupancy += 1
+							occupancy += 1
 
-								if(occupancy > max_occupancy):
-									max_occupancy = occupancy
+							if(occupancy > max_occupancy):
+								max_occupancy = occupancy
 
-								if tmask not in scalarized_threads.keys():
-									scalarized_threads[tmask] = 0
+							if tmask not in scalarized_threads.keys():
+								scalarized_threads[tmask] = 0
 
-								scalarized_threads[tmask] += 1
-								per_thread_count[tid]     += 1
-								scalar_mask[tid]		   = 1
+							scalarized_threads[tmask] += 1
+							per_thread_count[tid]     += 1
+							scalar_mask[tid]		   = 1
 							
-							else:
-								failed_pred_scalarization += 1
+						else:
+							failed_pred_scalarization += 1
 
 
 			## Check if the tmask is a reconvergence tmask for any of the threads
 			reconv_threads = 0 # Refers to the number of threads that have reconverged in this cycle
-			reconv_threads = reconverge(tmask, scalar_mask, reconverge_tmask)
+			reconv_threads = reconverge(tmask, scalar_mask, reconverge_tmask)	# reconvergence pc NOT reconvergence tmask
 
 			occupancy -= reconv_threads
 			num_reconv += reconv_threads
@@ -302,9 +319,9 @@ if __name__ == "__main__":
 				config_pattern = r"-gpgpu_shader_core_pipeline              ([0-9]+):([0-9]+)"
 				warp_num_pattern = r"Start warp ([0-9]+) and end warp ([0-9]+)"
 				# tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), active_mask=((0|1)+)"
-				tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), pc=(0x[0-9a-fA-F]+), active_mask=([01]+)"		# regex for instruction PC - Shrey
+				tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), pc=(0x[0-9a-fA-F]+), active_mask=([01]+)"	# regex for instruction PC - Shrey
 				end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
-				ipdom_pattern1 = r"\(potential\) branch divergence @  PC=0x([0-9a-fA-F]+)"	# regex for branch divergence PC - Shrey
+				ipdom_pattern1 = r"\(potential\) branch divergence @  PC=0x([0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
 				ipdom_pattern2 = r"immediate post dominator      @  PC=0x([0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
 
 				if(re.search(config_pattern,line)):
@@ -367,7 +384,7 @@ if __name__ == "__main__":
 				# creates a dictionary of divergent and reconvergence PCs that map to PCs that fall within their range - Shrey
 				if 'instr_pc' in locals() and instr_pc is not None: 				# Ensure instr_pc exists before using it - Shrey
 					for start, end in pc_pairs:
-						if int(start, 16) <= int(instr_pc, 16) <= int(end, 16):
+						if int(start, 16) <= int(instr_pc, 16) <= int(end, 16):		# check if instr_pc falls within divergent region / 16 is for hex -> decimal
 							if (start, end) not in scalarize_pcs:
 								scalarize_pcs[(start, end)] = set()  			# Use a set to store unique PCs - Shrey
 							scalarize_pcs[(start, end)].add(instr_pc)  			# Add ensures uniqueness - Shrey
@@ -432,6 +449,11 @@ if __name__ == "__main__":
 					total_active_threads += num_act_threads
 					tmask_profile[num_act_threads-1] += 1
 
+				# TESTING PURPOSES ONLY - Shrey
+				# if (len(tmasks) == 0):
+				# 	print(f'Warp {warp_id} has no thread masks')
+				# 	continue
+
 				tmask_percentages = [num*100/len(tmasks) for num in tmask_profile]
 				rel_simd_efficiency  = total_active_threads*100 / (len(tmasks)*32)
 
@@ -451,7 +473,7 @@ if __name__ == "__main__":
 				else:
 					scalarize_t0 = 1
 
-				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur = sat_counters(tmasks, instrs, scalarize_t0, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
+				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur = sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
 				num_scalarizations = 0
 
 				for scalar_tmask in scalarized_threads.keys():
