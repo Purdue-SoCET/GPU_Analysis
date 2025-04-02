@@ -191,7 +191,11 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 
 		tmask_on_simt, active_threads, result_tmask = and_scalar_mask(tmask, scalar_mask)
 		total_active_threads += active_threads
+
+		# current_instr_pc = instrs[idx] throwing 'list index out of range" error 
+		print(f"Current index: {idx}")
 		current_instr_pc = instrs[idx]
+		print(f"Current Instruction PC: {current_instr_pc}")
 
 		if tmask_on_simt == True:
 			## If not on the scalar cores
@@ -218,7 +222,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 									should_scalarize = True
 									attempts_at_scalarization += 1
 									reconverge_pcs[tid] = reconvergence_pc
-									# print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
+									print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
 									break
 
 						### Check if count of the threads sat_counter reached threshold (theta)

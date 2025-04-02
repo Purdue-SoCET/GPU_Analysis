@@ -1,0 +1,16 @@
+python3 heuristic_sim.py runs/hotspot_PC.txt jsons/testing.json
+Number of Expirements to be ran: 160
+
+Warp 0 Statistics
+Number of Thread Masks Processed: 43158
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+9                        | 0.32
+13                       | 0.26
+14                       | 14.21
+20                       | 0.10
+24                       | 3.78
+28                       | 3.33
+32                       | 77.99
+Current index: 0
