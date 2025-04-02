@@ -193,9 +193,9 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 		total_active_threads += active_threads
 
 		# current_instr_pc = instrs[idx] throwing 'list index out of range" error 
-		print(f"Current index: {idx}")
+		# print(f"Current index: {idx}")
 		current_instr_pc = instrs[idx]
-		print(f"Current Instruction PC: {current_instr_pc}")
+		# print(f"Current Instruction PC: {current_instr_pc}")
 
 		if tmask_on_simt == True:
 			## If not on the scalar cores
@@ -222,7 +222,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 									should_scalarize = True
 									attempts_at_scalarization += 1
 									reconverge_pcs[tid] = reconvergence_pc
-									print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
+									# print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
 									break
 
 						### Check if count of the threads sat_counter reached threshold (theta)
@@ -254,7 +254,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 							per_thread_count[tid]     += 1
 							scalar_mask[tid]		   = 1
 							
-						else if(sat_counters[tid] >= theta and occupancy < capacity and (scalarize_t0 or (not scalarize_t0 and not(tid == 0)))):
+						elif(sat_counters[tid] >= theta and occupancy < capacity and (scalarize_t0 or (not scalarize_t0 and not(tid == 0)))):
 							failed_pred_scalarization += 1
 
 
@@ -286,7 +286,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 	for idx in range(len(average_div_dur)):
 		if(per_thread_count[idx] > 0):
 			average_div_dur[idx] /= per_thread_count[idx]
-	
+
 	return speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur
 
 
@@ -303,6 +303,7 @@ if __name__ == "__main__":
 	warps_stats	   = {}
 	num_threads    = 32
 	warps_to_probe = {}
+	instr_pcs	   = []	# list of all PCs - Shrey
 
 	# needed for IPDOM analysis - Shrey
 	ipdom_analysis = {}	# list of divergent and reconvergence PCs - Shrey
@@ -349,10 +350,12 @@ if __name__ == "__main__":
 							warps_stats[warps_to_probe[i]] 	= []
 
 				if(re.search(tmask_pattern,line)):
-					warp_id = re.search(tmask_pattern,line).group(1)
-					core_id = re.search(tmask_pattern,line).group(2)
+					warp_id  = re.search(tmask_pattern,line).group(1)
+					core_id  = re.search(tmask_pattern,line).group(2)
 					instr_pc = re.search(tmask_pattern,line).group(3)		# grab instruction PC - Shrey
-					tmask   = re.search(tmask_pattern,line).group(4)
+					tmask    = re.search(tmask_pattern,line).group(4)
+
+					instr_pcs.append(instr_pc)	# add instruction PC to list - Shrey
 
 					# ids1  = re.search(tmask_pattern,line).group(5)
 					
@@ -477,7 +480,7 @@ if __name__ == "__main__":
 				else:
 					scalarize_t0 = 1
 
-				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur = sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
+				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur = sat_counters(tmasks, instr_pcs, scalarize_t0, scalarize_pcs, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
 				num_scalarizations = 0
 
 				for scalar_tmask in scalarized_threads.keys():
