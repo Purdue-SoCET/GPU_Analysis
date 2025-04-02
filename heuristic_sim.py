@@ -254,7 +254,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 							per_thread_count[tid]     += 1
 							scalar_mask[tid]		   = 1
 							
-						else:
+						else if(sat_counters[tid] >= theta and occupancy < capacity and (scalarize_t0 or (not scalarize_t0 and not(tid == 0)))):
 							failed_pred_scalarization += 1
 
 
