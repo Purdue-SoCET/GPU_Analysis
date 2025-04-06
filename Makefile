@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/hotspot_PC.txt
-DEST_FILE := jsons/testing.json
-PLOTS_SUB_DIR := plots/testing
+SOURCE_FILE := runs/bfs_new.txt
+DEST_FILE := jsons/bfs_new.json
+PLOTS_SUB_DIR := plots/bfs_new
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
