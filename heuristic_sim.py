@@ -40,41 +40,41 @@ def is_tid_on(tmask, tid):
 
 # THIS FUNCTION IS RENDERED USELESS AFTER NEW UPDATES
 # Finds most recent tmask where the scalarized thread has been active allowing only tmasks for SPLIT instructions
-def find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs):
+# def find_reconv_tmask(idx, tmasks, tmask, tid, instrs, div_instrs):
 
-	reconverge_tmask = ""
-	is_split		 = 0
+# 	reconverge_tmask = ""
+# 	is_split		 = 0
 
-	allowed_div_instr = ["SPLIT", "SPLIT.N"]
+# 	allowed_div_instr = ["SPLIT", "SPLIT.N"]
 	
-	while True:
-		prev_tmask = tmasks[idx]
+# 	while True:
+# 		prev_tmask = tmasks[idx]
 
-		if(prev_tmask != tmask):
-			if(is_tid_on(prev_tmask, tid)):
-				# split_instr = instrs[idx]
+# 		if(prev_tmask != tmask):
+# 			if(is_tid_on(prev_tmask, tid)):
+# 				# split_instr = instrs[idx]
 
-				# if split_instr not in div_instrs.keys():
-				# 	new_dict_entry = {split_instr: 0}
-				# 	div_instrs.update(new_dict_entry)
+# 				# if split_instr not in div_instrs.keys():
+# 				# 	new_dict_entry = {split_instr: 0}
+# 				# 	div_instrs.update(new_dict_entry)
 				
-				# div_instrs[split_instr] += 1
+# 				# div_instrs[split_instr] += 1
 
-				# if(split_instr in allowed_div_instr):
-				reconverge_tmask = prev_tmask
-				is_split = 1
-				break
-				# else:
-				# 	break
+# 				# if(split_instr in allowed_div_instr):
+# 				reconverge_tmask = prev_tmask
+# 				is_split = 1
+# 				break
+# 				# else:
+# 				# 	break
 			
-			idx -= 1
+# 			idx -= 1
 		
-		else:
-			if(idx == 0):
-				break
-			idx -= 1
+# 		else:
+# 			if(idx == 0):
+# 				break
+# 			idx -= 1
 	
-	return reconverge_tmask, is_split, div_instrs
+# 	return reconverge_tmask, is_split, div_instrs
 
 # Reconverges all threads whose reconvergence tmask matches the current tmask
 def reconverge(curr_instr_pc, scalar_mask, reconverge_pcs):
@@ -192,10 +192,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 		tmask_on_simt, active_threads, result_tmask = and_scalar_mask(tmask, scalar_mask)
 		total_active_threads += active_threads
 
-		# current_instr_pc = instrs[idx] throwing 'list index out of range" error 
-		# print(f"Current index: {idx}")
 		current_instr_pc = instrs[idx]
-		# print(f"Current Instruction PC: {current_instr_pc}")
 
 		if tmask_on_simt == True:
 			## If not on the scalar cores
@@ -222,7 +219,6 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 									should_scalarize = True
 									attempts_at_scalarization += 1
 									reconverge_pcs[tid] = reconvergence_pc
-									# print(f"Current PC: {current_instr_pc}, Reconvergence PC: {reconvergence_pcs}")	# debugging only - Shrey
 									break
 
 						### Check if count of the threads sat_counter reached threshold (theta)
@@ -260,6 +256,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 
 			## Check if the tmask is a reconvergence tmask for any of the threads
 			reconv_threads = 0 # Refers to the number of threads that have reconverged in this cycle
+
 			reconv_threads = reconverge(current_instr_pc, scalar_mask, reconverge_pcs) # modified reconverge function to check if the reconvergence pc matches the current instr pc - Shrey
 
 			occupancy -= reconv_threads
@@ -326,8 +323,12 @@ if __name__ == "__main__":
 				# tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), active_mask=((0|1)+)"
 				tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), pc=(0x[0-9a-fA-F]+), active_mask=([01]+)"	# regex for instruction PC - Shrey
 				end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
-				ipdom_pattern1 = r"\(potential\) branch divergence @  PC=0x([0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
-				ipdom_pattern2 = r"immediate post dominator      @  PC=0x([0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
+				
+				# this messed everything up
+				# ipdom_pattern1 = r"\(potential\) branch divergence @  PC=0x([0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
+				# ipdom_pattern2 = r"immediate post dominator      @  PC=0x([0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
+				ipdom_pattern1 = r"\(potential\) branch divergence @  PC=(0x[0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
+				ipdom_pattern2 = r"immediate post dominator      @  PC=(0x[0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
 
 				if(re.search(config_pattern,line)):
 					total_num_threads = int(re.search(config_pattern,line).group(1))
@@ -455,11 +456,6 @@ if __name__ == "__main__":
 					num_act_threads = count_active_threads(tmask)
 					total_active_threads += num_act_threads
 					tmask_profile[num_act_threads-1] += 1
-
-				# TESTING PURPOSES ONLY - Shrey
-				# if (len(tmasks) == 0):
-				# 	print(f'Warp {warp_id} has no thread masks')
-				# 	continue
 
 				tmask_percentages = [num*100/len(tmasks) for num in tmask_profile]
 				rel_simd_efficiency  = total_active_threads*100 / (len(tmasks)*32)
