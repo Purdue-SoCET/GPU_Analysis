@@ -217,7 +217,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 								if current_instr_pc in pcs:
 									reconvergence_pc = start_end[1]	# reconvergence pc
 									should_scalarize = True
-									attempts_at_scalarization += 1
+									# attempts_at_scalarization += 1
 									reconverge_pcs[tid] = reconvergence_pc
 									break
 
@@ -239,6 +239,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 							sat_counters[tid] = 0
 
 							occupancy += 1
+							attempts_at_scalarization += 1
 
 							if(occupancy > max_occupancy):
 								max_occupancy = occupancy
@@ -252,6 +253,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 							
 						elif(sat_counters[tid] >= theta and occupancy < capacity and (scalarize_t0 or (not scalarize_t0 and not(tid == 0)))):
 							failed_pred_scalarization += 1
+							attempts_at_scalarization += 1
 
 
 			## Check if the tmask is a reconvergence tmask for any of the threads
