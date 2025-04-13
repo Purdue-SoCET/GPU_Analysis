@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/bfs_small.txt
-DEST_FILE := jsons/bfs_small_experimental.json
-PLOTS_SUB_DIR := plots/bfs_small_experimental
+SOURCE_FILE := runs/pathfinder_small.txt
+DEST_FILE := jsons/pathfinder_small.json
+PLOTS_SUB_DIR := plots/pathfinder_final
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
