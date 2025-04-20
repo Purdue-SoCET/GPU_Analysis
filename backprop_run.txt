@@ -1,0 +1,11 @@
+python3 heuristic_sim.py runs/backprop_small.txt jsons/testing.json
+Number of Expirements to be ran: 160
+
+Warp 0 Statistics
+Number of Thread Masks Processed: 2695
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+2                        | 8.31
+16                       | 19.85
+32                       | 71.84

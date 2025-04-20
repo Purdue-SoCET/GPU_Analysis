@@ -155,6 +155,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 
 	simd_efficiency		 = 0
 	total_active_threads = 0
+	tmask_scalarized_count = 0	# Number of times that every thread is scalarized
 
 	attempts_at_scalarization = 0
 	failed_pred_scalarization = 0
@@ -176,6 +177,8 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 	per_thread_count     = [0]*num_threads
 	sat_counters		 = [0]*num_threads
 	reconverge_pcs  	 = [0]*num_threads
+
+	tmask_pair_counts = {}
 	
 	for idx, tmask in enumerate(tmasks):
 		
@@ -185,8 +188,8 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 		# Check if tmask is on the scalar core or not
 
 		# count number of cycles a thread is on the scalar mask (how many cycles it's divergent for)
-		for idxs, bit in enumerate(scalar_mask):
-			if (bit):
+		for idxs, is_scalarized in enumerate(scalar_mask):
+			if (is_scalarized):
 				average_div_dur[idxs] += 1
 
 		tmask_on_simt, active_threads, result_tmask = and_scalar_mask(tmask, scalar_mask)
@@ -267,6 +270,17 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 			## Increment sim_cycles
 			sim_cycles += 1
 
+			# record tmask pairs - Shrey
+			if tmask != result_tmask:
+				pair = (result_tmask, tmask)
+				if pair not in tmask_pair_counts:
+					tmask_pair_counts[pair] = 0
+				tmask_pair_counts[pair] += 1  # increment count for the pair
+
+			if all(bits == 0 for bits in result_tmask):	# if all bits are 0, then all threads are scalarized
+				tmask_scalarized_count += 1
+				
+
 		## If on the scalar core don't increment sim cycles as it is running in parallel with the other tmasks
 		else:
 			pass
@@ -286,7 +300,8 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 		if(per_thread_count[idx] > 0):
 			average_div_dur[idx] /= per_thread_count[idx]
 
-	return speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur
+	# new additions: tmask_scalarized_count, tmask_pair_counts - Shrey
+	return speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur, tmask_pair_counts, tmask_scalarized_count
 
 
 			
@@ -472,13 +487,15 @@ if __name__ == "__main__":
 						if(percent > 0):
 							print(f'{thread_num+1:<4}                     | {percent:.2f}')
 
+				exit()	# just for Hassan
+
 				if(warp_id != "0"):
 					scalarize_t0 = 1
 
 				else:
 					scalarize_t0 = 1
 
-				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur = sat_counters(tmasks, instr_pcs, scalarize_t0, scalarize_pcs, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
+				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur, tmask_pair_counts, tmask_scalarized_count = sat_counters(tmasks, instr_pcs, scalarize_t0, scalarize_pcs, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
 				num_scalarizations = 0
 
 				for scalar_tmask in scalarized_threads.keys():
@@ -547,7 +564,7 @@ if __name__ == "__main__":
 			avg_num_scalarizations  /= num_warps
 			avg_num_reconvergences  /= num_warps
 
-			expirement[str((num_scalar,theta))] = [num_scalar,theta,avg_num_cycles_saved,avg_pct_cycles_saved,avg_speed_up,avg_rel_simd_efficiency,avg_simd_efficiency,avg_pct_non_split_div,avg_max_ocp,avg_pct_max_cap,avg_num_scalarizations,avg_num_reconvergences]
+			expirement[str((num_scalar,theta))] = [num_scalar,theta,avg_num_cycles_saved,avg_pct_cycles_saved,avg_speed_up,avg_rel_simd_efficiency,avg_simd_efficiency,avg_pct_non_split_div,avg_max_ocp,avg_pct_max_cap,avg_num_scalarizations,avg_num_reconvergences,tmask_scalarized_count]
 
 			if(number_of_expirements_done == 0):
 				print("\n******************************************")
@@ -563,6 +580,7 @@ if __name__ == "__main__":
 				print(f'Avg. Percentage of Max Capacity:       {avg_pct_max_cap:.3f}')
 				print(f'Avg. Number of Scalarizations: 	       {avg_num_scalarizations}')
 				print(f'Avg. Number of Reconvergences:         {avg_num_reconvergences}')
+				print(f'Avg. Divergence Duration (Cycles):     {average_div_dur}') 	# added to show average divergence duration for each thread
 				print("******************************************")
 
 			number_of_expirements_done += 1

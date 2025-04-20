@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/pathfinder_small.txt
-DEST_FILE := jsons/pathfinder_small.json
-PLOTS_SUB_DIR := plots/pathfinder_final
+SOURCE_FILE := runs/new_mmul.txt
+DEST_FILE := jsons/testing.json
+PLOTS_SUB_DIR := plots/mmul_testing
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
