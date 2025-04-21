@@ -1,6 +1,6 @@
-SOURCE_FILE := runs/new_mmul.txt
-DEST_FILE := jsons/testing.json
-PLOTS_SUB_DIR := plots/mmul_testing
+SOURCE_FILE := runs/new_gaussian.txt
+DEST_FILE := jsons/gaussian_test.json
+PLOTS_SUB_DIR := plots/gaussian_test
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)

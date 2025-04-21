@@ -20,6 +20,7 @@ if __name__ == "__main__":
     avg_pct_max_cap_idx         = 9
     avg_num_scalarizations_idx  = 10
     avg_num_reconvergences_idx  = 11
+    avg_div_dur_idx             = 12
 
     num_scalar_data = {}
 
@@ -206,6 +207,23 @@ if __name__ == "__main__":
     plt.close()
 
 
+    for num_scalar_idx, num_scalar in enumerate(num_scalar_data.keys()):
+        data = num_scalar_data[num_scalar]
+
+        thetas = [expr[theta_idx-1] for expr in data]
+
+        avg_pct_max_cap = [expr[avg_pct_max_cap_idx-1] for expr in data]
+
+
+        plt.plot(thetas, avg_pct_max_cap, colors[num_scalar_idx], label=f'Percentage of Max Capacity attempts: {num_scalar}')
+        plt.xlabel("Saturation Limit")
+        plt.ylabel("Percentage of Max Capacity")
+        plt.title(f'Scalarization Bandwidth: 1-8')
+
+    plt.legend()
+    plt.savefig(f'{dest_folder}/pct_max_cap.png')
+    plt.close()
+
 
     for num_scalar_idx, num_scalar in enumerate(num_scalar_data.keys()):
         data = num_scalar_data[num_scalar]
@@ -222,6 +240,82 @@ if __name__ == "__main__":
 
     plt.legend()
     plt.savefig(f'{dest_folder}/pct_max_cap.png')
+    plt.close()
+
+
+    # # Plot average_div_dur as grouped bar chart per experiment
+    # experiments = list(expirements.values())
+
+    # # Assume all runs have same number of threads (based on first run)
+    # num_threads = len(experiments[0][avg_div_dur_idx])
+    # thread_ids = list(range(num_threads))
+    # num_experiments = len(experiments)
+
+    # # Set up bar width and x ticks for grouping
+    # bar_width = 0.8 / num_experiments
+    # x = np.arange(num_threads)
+
+    # plt.figure(figsize=(16, 6))
+
+    # for i, exp in enumerate(experiments):
+    #     avg_div_dur = exp[avg_div_dur_idx]  # This is a list now
+    #     durations = avg_div_dur  # Each index is the thread ID
+
+    #     # Shift bars so they don't overlap (grouped style)
+    #     plt.bar(x + i * bar_width, durations, width=bar_width, label=f'Run {i+1}')
+
+    # plt.xlabel("Thread ID")
+    # plt.ylabel("Average Divergence Duration (cycles)")
+    # plt.title("Per-Thread Average Divergence Duration Across Runs")
+    # plt.xticks(x + bar_width * (num_experiments / 2 - 0.5), thread_ids)
+    # plt.legend()
+    # plt.tight_layout()
+    # plt.savefig(f'{dest_folder}/avg_div_dur_per_thread.png')
+    # plt.close()
+
+    # Plot average_div_dur as grouped bar chart per experiment
+    experiments = list(expirements.values())
+    num_experiments = len(experiments)
+
+    # Assume all runs have same number of threads (based on first run)
+    num_threads = len(experiments[0][avg_div_dur_idx])
+    bar_width = 0.8 / num_experiments
+
+    # Collect thread IDs that have at least one non-zero value across all runs
+    valid_thread_ids = []
+    for thread_id in range(num_threads):
+        if any(exp[avg_div_dur_idx][thread_id] > 0 for exp in experiments):
+            valid_thread_ids.append(thread_id)
+
+    x = np.arange(len(valid_thread_ids))  # x positions for the filtered thread IDs
+
+    plt.figure(figsize=(16, 6))
+
+    for i, exp in enumerate(experiments):
+        avg_div_dur = exp[avg_div_dur_idx]
+        filtered_durations = [avg_div_dur[tid] for tid in valid_thread_ids]
+
+        bars = plt.bar(x + i * bar_width, filtered_durations, width=bar_width, label=f'Scalarization Bandwidth: {exp[num_scalar_idx]}\nSaturation Limit: {exp[theta_idx]}', color=colors[i % len(colors)])
+
+        # Annotate bars with their value if > 0
+        for rect, value in zip(bars, filtered_durations):
+            if value > 0:
+                plt.text(
+                    rect.get_x() + rect.get_width() / 2,
+                    rect.get_height() + 0.5,
+                    f'{value:.1f}',
+                    ha='center',
+                    va='bottom',
+                    fontsize=8
+                )
+
+    plt.xlabel("Thread IDs (With Non-Zero Divergence Duration)")
+    plt.ylabel("Average Divergence Duration (cycles)")
+    plt.title("Per-Thread Average Divergence Duration Across Runs")
+    plt.xticks(x + bar_width * (num_experiments / 2 - 0.5), valid_thread_ids)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(f'{dest_folder}/avg_div_dur_per_thread.png')
     plt.close()
 
 

@@ -10,6 +10,7 @@
 import re
 import json
 import sys
+import numpy as np
 
 def count_active_threads(tmask):
 	count = 0
@@ -144,7 +145,7 @@ def and_scalar_mask(tmask, scalar_mask):
 #
 # 10. div_instrs: Dictionary of instructions associated with a possible reconvergence tmask for a given thread. (e.g. want to scalarize a thread but the last tmask where it was active had instr PRED.N so we don't scalarize it but increment the PRED.N entry in the dictionary)
 
-def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_threads=32, capacity=32, num_scalar=1):
+def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts, theta=1000, num_threads=32, capacity=32, num_scalar=1):
 	# Baseline number of cycles executed on vortex GPU
 	total_cycles         = len(tmasks)
 	sim_cycles			 = 0
@@ -178,7 +179,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 	sat_counters		 = [0]*num_threads
 	reconverge_pcs  	 = [0]*num_threads
 
-	tmask_pair_counts = {}
+	# tmask_pair_counts = {} 	# Dictionary of active tmask and result tmask pairs and their counts - Shrey
 	
 	for idx, tmask in enumerate(tmasks):
 		
@@ -271,8 +272,8 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, theta=1000, num_th
 			sim_cycles += 1
 
 			# record tmask pairs - Shrey
-			if tmask != result_tmask:
-				pair = (result_tmask, tmask)
+			if conv_str_to_list(tmask) != result_tmask:
+				pair = (tuple(result_tmask), tuple(tmask))
 				if pair not in tmask_pair_counts:
 					tmask_pair_counts[pair] = 0
 				tmask_pair_counts[pair] += 1  # increment count for the pair
@@ -433,8 +434,10 @@ if __name__ == "__main__":
 
 	num_warps = len(warps_to_probe.keys())
 
-	thetas = range(10, 2000, 100)
-	num_scalars = range(1, 9)
+	# thetas = range(10, 2000, 100)
+	thetas = [10]
+	# num_scalars = range(1, 9)
+	num_scalars = [8]
 	capacity = 16
 	
 	expirement = {}
@@ -457,6 +460,10 @@ if __name__ == "__main__":
 			avg_pct_max_cap = 0
 			avg_num_scalarizations = 0
 			avg_num_reconvergences = 0
+			avg_tmask_scalarized_count = 0
+
+			warpwide_avg_div_dur = [0] * num_threads 
+			tmask_pair_counts = {}	# Dictionary of active tmask and result tmask pairs and their counts - Shrey
 
 			for warp_id in warps_to_probe.values():
 
@@ -487,15 +494,13 @@ if __name__ == "__main__":
 						if(percent > 0):
 							print(f'{thread_num+1:<4}                     | {percent:.2f}')
 
-				exit()	# just for Hassan
-
 				if(warp_id != "0"):
 					scalarize_t0 = 1
 
 				else:
 					scalarize_t0 = 1
 
-				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur, tmask_pair_counts, tmask_scalarized_count = sat_counters(tmasks, instr_pcs, scalarize_t0, scalarize_pcs, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
+				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur, tmask_pair_counts, tmask_scalarized_count = sat_counters(tmasks, instr_pcs, scalarize_t0, scalarize_pcs, tmask_pair_counts, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
 				num_scalarizations = 0
 
 				for scalar_tmask in scalarized_threads.keys():
@@ -516,16 +521,18 @@ if __name__ == "__main__":
 				warps_stats[warp_id].append(div_instrs)
 				warps_stats[warp_id].append(average_div_dur)
 
-				avg_speed_up 			+= speed_up
-				avg_num_cycles_saved 	+= cycles_saved
-				avg_pct_cycles_saved 	+= cycles_saved*100/len(tmasks)
-				avg_rel_simd_efficiency += rel_simd_efficiency
-				avg_simd_efficiency 	+= simd_efficiency
-				avg_pct_non_split_div 	+= frac_pred*100
-				avg_max_ocp 			+= max_occupancy
-				avg_pct_max_cap 		+= frac_ocp_full*100
-				avg_num_scalarizations  += num_scalarizations
-				avg_num_reconvergences  += num_reconv
+				avg_speed_up 				+= speed_up
+				avg_num_cycles_saved 		+= cycles_saved
+				avg_pct_cycles_saved 		+= cycles_saved*100/len(tmasks)
+				avg_rel_simd_efficiency 	+= rel_simd_efficiency
+				avg_simd_efficiency 		+= simd_efficiency
+				avg_pct_non_split_div 		+= frac_pred*100
+				avg_max_ocp 				+= max_occupancy
+				avg_pct_max_cap 			+= frac_ocp_full*100
+				avg_num_scalarizations  	+= num_scalarizations
+				avg_num_reconvergences  	+= num_reconv
+				warpwide_avg_div_dur 		 = np.add(warpwide_avg_div_dur, average_div_dur)	# adding two lists together
+				avg_tmask_scalarized_count  += tmask_scalarized_count
 
 				if(number_of_expirements_done == 0):
 					print("\n******************************************")
@@ -540,6 +547,7 @@ if __name__ == "__main__":
 					print(f'Percentage of Max Capacity:	  {frac_ocp_full*100:.3f}')
 					print(f'Number of Scalarizations: 	  {num_scalarizations}')
 					print(f'Number of Reconvergences:         {num_reconv}')
+					print(f'Number of Scalarized Thread Masks: {tmask_scalarized_count}')
 					print(f'\nScalarized Thread Masks:')
 					print("Thread Mask           	         | Number of Times Caused Scalarization")
 					print("------------------------------------------------------------------------")
@@ -553,18 +561,20 @@ if __name__ == "__main__":
 							print(f'{tid:<4}          | {per_thread_count[tid]:<4}                              | {average_div_dur[tid]:.1f}')
 					print("*******************************************************************************")
 
-			avg_speed_up 			/= num_warps
-			avg_num_cycles_saved 	/= num_warps
-			avg_pct_cycles_saved 	/= num_warps
-			avg_rel_simd_efficiency /= num_warps
-			avg_simd_efficiency 	/= num_warps
-			avg_pct_non_split_div 	/= num_warps
-			avg_max_ocp 			/= num_warps
-			avg_pct_max_cap 	    /= num_warps
-			avg_num_scalarizations  /= num_warps
-			avg_num_reconvergences  /= num_warps
+			avg_speed_up 			   /= num_warps
+			avg_num_cycles_saved 	   /= num_warps
+			avg_pct_cycles_saved 	   /= num_warps
+			avg_rel_simd_efficiency    /= num_warps
+			avg_simd_efficiency 	   /= num_warps
+			avg_pct_non_split_div 	   /= num_warps
+			avg_max_ocp 			   /= num_warps
+			avg_pct_max_cap 	       /= num_warps
+			avg_num_scalarizations     /= num_warps
+			avg_num_reconvergences     /= num_warps
+			warpwide_avg_div_dur        = [avg_div_dur/num_warps for avg_div_dur in warpwide_avg_div_dur]	# divide by 2 to get average divergence duration
+			avg_tmask_scalarized_count /= num_warps
 
-			expirement[str((num_scalar,theta))] = [num_scalar,theta,avg_num_cycles_saved,avg_pct_cycles_saved,avg_speed_up,avg_rel_simd_efficiency,avg_simd_efficiency,avg_pct_non_split_div,avg_max_ocp,avg_pct_max_cap,avg_num_scalarizations,avg_num_reconvergences,tmask_scalarized_count]
+			expirement[str((num_scalar,theta))] = [num_scalar,theta,avg_num_cycles_saved,avg_pct_cycles_saved,avg_speed_up,avg_rel_simd_efficiency,avg_simd_efficiency,avg_pct_non_split_div,avg_max_ocp,avg_pct_max_cap,avg_num_scalarizations,avg_num_reconvergences,warpwide_avg_div_dur]
 
 			if(number_of_expirements_done == 0):
 				print("\n******************************************")
@@ -580,7 +590,14 @@ if __name__ == "__main__":
 				print(f'Avg. Percentage of Max Capacity:       {avg_pct_max_cap:.3f}')
 				print(f'Avg. Number of Scalarizations: 	       {avg_num_scalarizations}')
 				print(f'Avg. Number of Reconvergences:         {avg_num_reconvergences}')
-				print(f'Avg. Divergence Duration (Cycles):     {average_div_dur}') 	# added to show average divergence duration for each thread
+				print(f'Avg. Divergence Duration (Cycles) Per Thread:     {warpwide_avg_div_dur}')
+				print(f'Avg. Number of All 0 Thread Masks: {avg_tmask_scalarized_count}')	# counts number of times that all threads were scalarized
+				print("Total Thread Mask Scalarization Counts:")
+				for tmask_pair, count in tmask_pair_counts.items():
+					result_tmask, original_tmask = tmask_pair
+					result_str = ''.join(str(b) for b in result_tmask)
+					original_str = ''.join(str(b) for b in original_tmask)
+					print(f"({result_str},{original_str}): {count}")
 				print("******************************************")
 
 			number_of_expirements_done += 1

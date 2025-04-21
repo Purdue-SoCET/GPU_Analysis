@@ -1,0 +1,788 @@
+python3 heuristic_sim.py runs/new_gaussian.txt jsons/gaussian_test.json
+Number of Expirements to be ran: 1
+
+Warp 0 Statistics
+Number of Thread Masks Processed: 1365
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+1                        | 2.49
+2                        | 4.18
+3                        | 2.49
+4                        | 13.33
+5                        | 1.47
+6                        | 3.15
+7                        | 1.47
+8                        | 1.90
+9                        | 1.47
+10                       | 1.47
+11                       | 1.47
+12                       | 3.59
+13                       | 1.47
+14                       | 1.47
+15                       | 1.47
+16                       | 42.86
+32                       | 14.29
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           541
+Percentage of Total Cycles Saved: 39.63
+Speed Up (%): 		          65.655
+Rel SIMD Eff:                     44.212
+Sim SIMD Eff:	                  47.247
+Percentage of Not SPLIT Div:	  87.660
+Max Occupancy:		          16
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  29
+Number of Reconvergences:         25
+Number of Scalarized Thread Masks: 140
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000000001111 | 12
+00000000000000000000001111111111 | 6
+00000000000000001111111111111111 | 6
+00000000000000000000000000011111 | 5
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+16            | 1                                 | 417.0
+17            | 1                                 | 417.0
+18            | 1                                 | 417.0
+19            | 1                                 | 417.0
+20            | 1                                 | 417.0
+21            | 1                                 | 417.0
+22            | 1                                 | 438.0
+23            | 1                                 | 438.0
+24            | 1                                 | 438.0
+25            | 1                                 | 438.0
+26            | 1                                 | 438.0
+27            | 2                                 | 234.0
+28            | 4                                 | 220.8
+29            | 4                                 | 220.8
+30            | 4                                 | 220.8
+31            | 4                                 | 220.8
+*******************************************************************************
+
+Warp 1 Statistics
+Number of Thread Masks Processed: 893
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+1                        | 1.57
+2                        | 1.57
+3                        | 1.57
+4                        | 14.89
+8                        | 3.25
+12                       | 3.25
+16                       | 52.07
+32                       | 21.84
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           183
+Percentage of Total Cycles Saved: 20.49
+Speed Up (%): 		          25.775
+Rel SIMD Eff:                     52.058
+Sim SIMD Eff:	                  51.369
+Percentage of Not SPLIT Div:	  88.679
+Max Occupancy:		          16
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  24
+Number of Reconvergences:         8
+Number of Scalarized Thread Masks: 97
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000000001111 | 12
+00000000000000000011001100110011 | 6
+00000000000000001111111111111111 | 6
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+16            | 1                                 | 161.0
+17            | 1                                 | 161.0
+18            | 1                                 | 217.0
+19            | 1                                 | 217.0
+20            | 1                                 | 161.0
+21            | 1                                 | 161.0
+22            | 1                                 | 217.0
+23            | 1                                 | 217.0
+24            | 1                                 | 161.0
+25            | 1                                 | 161.0
+26            | 1                                 | 217.0
+27            | 1                                 | 217.0
+28            | 3                                 | 142.3
+29            | 3                                 | 142.3
+30            | 3                                 | 142.3
+31            | 3                                 | 142.3
+*******************************************************************************
+
+Warp 2 Statistics
+Number of Thread Masks Processed: 721
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+1                        | 1.94
+2                        | 1.94
+3                        | 1.94
+4                        | 11.23
+8                        | 4.02
+12                       | 4.02
+16                       | 47.85
+32                       | 27.05
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           44
+Percentage of Total Cycles Saved: 6.10
+Speed Up (%): 		          6.499
+Rel SIMD Eff:                     55.253
+Sim SIMD Eff:	                  53.776
+Percentage of Not SPLIT Div:	  96.512
+Max Occupancy:		          4
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  12
+Number of Reconvergences:         8
+Number of Scalarized Thread Masks: 108
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000000001111 | 8
+00000000000000000001000100010001 | 4
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 267.0
+23            | 1                                 | 267.0
+27            | 1                                 | 267.0
+28            | 2                                 | 9.0
+29            | 2                                 | 9.0
+30            | 2                                 | 9.0
+31            | 3                                 | 95.0
+*******************************************************************************
+
+Warp 3 Statistics
+Number of Thread Masks Processed: 549
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+1                        | 2.55
+2                        | 2.55
+3                        | 2.55
+4                        | 5.28
+8                        | 5.28
+12                       | 5.28
+16                       | 40.98
+32                       | 35.52
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           42
+Percentage of Total Cycles Saved: 7.65
+Speed Up (%): 		          8.284
+Rel SIMD Eff:                     60.451
+Sim SIMD Eff:	                  64.287
+Percentage of Not SPLIT Div:	  98.222
+Max Occupancy:		          4
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  4
+Number of Reconvergences:         4
+Number of Scalarized Thread Masks: 58
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000001000100010001 | 4
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 58.0
+23            | 1                                 | 58.0
+27            | 1                                 | 58.0
+31            | 1                                 | 58.0
+*******************************************************************************
+
+Warp 4 Statistics
+Number of Thread Masks Processed: 801
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 3.75
+8                        | 3.75
+12                       | 3.75
+16                       | 64.42
+32                       | 24.34
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           113
+Percentage of Total Cycles Saved: 14.11
+Speed Up (%): 		          16.424
+Rel SIMD Eff:                     59.363
+Sim SIMD Eff:	                  59.648
+Percentage of Not SPLIT Div:	  50.000
+Max Occupancy:		          16
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  16
+Number of Reconvergences:         0
+Number of Scalarized Thread Masks: 22
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000011111111 | 8
+00000000000000001111111111111111 | 8
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+16            | 1                                 | 141.0
+17            | 1                                 | 141.0
+18            | 1                                 | 141.0
+19            | 1                                 | 141.0
+20            | 1                                 | 141.0
+21            | 1                                 | 141.0
+22            | 1                                 | 141.0
+23            | 1                                 | 141.0
+24            | 1                                 | 175.0
+25            | 1                                 | 175.0
+26            | 1                                 | 175.0
+27            | 1                                 | 175.0
+28            | 1                                 | 175.0
+29            | 1                                 | 175.0
+30            | 1                                 | 175.0
+31            | 1                                 | 175.0
+*******************************************************************************
+
+Warp 5 Statistics
+Number of Thread Masks Processed: 750
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+2                        | 3.20
+4                        | 0.80
+6                        | 3.20
+8                        | 0.80
+12                       | 4.00
+16                       | 62.00
+32                       | 26.00
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           45
+Percentage of Total Cycles Saved: 6.00
+Speed Up (%): 		          6.383
+Rel SIMD Eff:                     59.600
+Sim SIMD Eff:	                  58.324
+Percentage of Not SPLIT Div:	  12.500
+Max Occupancy:		          7
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  7
+Number of Reconvergences:         0
+Number of Scalarized Thread Masks: 15
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000001100110011 | 6
+00000000000000000001000100010001 | 1
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 138.0
+22            | 1                                 | 191.0
+23            | 1                                 | 191.0
+26            | 1                                 | 191.0
+27            | 1                                 | 191.0
+30            | 1                                 | 191.0
+31            | 1                                 | 191.0
+*******************************************************************************
+
+Warp 6 Statistics
+Number of Thread Masks Processed: 630
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 4.76
+8                        | 4.76
+12                       | 4.76
+16                       | 54.76
+32                       | 30.95
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           0
+Percentage of Total Cycles Saved: 0.00
+Speed Up (%): 		          0.000
+Rel SIMD Eff:                     61.905
+Sim SIMD Eff:	                  61.905
+Percentage of Not SPLIT Div:	  100.000
+Max Occupancy:		          0
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  0
+Number of Reconvergences:         0
+Number of Scalarized Thread Masks: 60
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+*******************************************************************************
+
+Warp 7 Statistics
+Number of Thread Masks Processed: 510
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 5.88
+8                        | 5.88
+12                       | 5.88
+16                       | 44.12
+32                       | 38.24
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           3
+Percentage of Total Cycles Saved: 0.59
+Speed Up (%): 		          0.592
+Rel SIMD Eff:                     64.706
+Sim SIMD Eff:	                  64.867
+Percentage of Not SPLIT Div:	  98.551
+Max Occupancy:		          4
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  4
+Number of Reconvergences:         4
+Number of Scalarized Thread Masks: 57
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000001000100010001 | 4
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 9.0
+23            | 1                                 | 9.0
+27            | 1                                 | 9.0
+31            | 1                                 | 9.0
+*******************************************************************************
+
+Warp 8 Statistics
+Number of Thread Masks Processed: 709
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 4.23
+8                        | 4.23
+12                       | 4.23
+16                       | 59.80
+32                       | 27.50
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           26
+Percentage of Total Cycles Saved: 3.67
+Speed Up (%): 		          3.807
+Rel SIMD Eff:                     60.578
+Sim SIMD Eff:	                  57.774
+Percentage of Not SPLIT Div:	  91.803
+Max Occupancy:		          10
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  10
+Number of Reconvergences:         0
+Number of Scalarized Thread Masks: 35
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000000001111 | 4
+00000000000000000011001100110011 | 2
+00000000000000000001000100010001 | 2
+00000000000000001111111111111111 | 2
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 5.0
+23            | 1                                 | 5.0
+24            | 1                                 | 0.0
+25            | 1                                 | 0.0
+26            | 1                                 | 42.0
+27            | 1                                 | 42.0
+28            | 1                                 | 268.0
+29            | 1                                 | 268.0
+30            | 1                                 | 268.0
+31            | 1                                 | 268.0
+*******************************************************************************
+
+Warp 9 Statistics
+Number of Thread Masks Processed: 681
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 4.41
+8                        | 4.41
+12                       | 4.41
+16                       | 58.15
+32                       | 28.63
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           77
+Percentage of Total Cycles Saved: 11.31
+Speed Up (%): 		          12.748
+Rel SIMD Eff:                     61.013
+Sim SIMD Eff:	                  57.249
+Percentage of Not SPLIT Div:	  87.500
+Max Occupancy:		          16
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  16
+Number of Reconvergences:         0
+Number of Scalarized Thread Masks: 44
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000000001111 | 4
+00000000000000000011001100110011 | 2
+00000000000000000001000100010001 | 2
+00000000000000001111111111111111 | 8
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+16            | 1                                 | 90.0
+17            | 1                                 | 90.0
+18            | 1                                 | 97.0
+19            | 1                                 | 117.0
+20            | 1                                 | 90.0
+21            | 1                                 | 90.0
+22            | 1                                 | 97.0
+23            | 1                                 | 117.0
+24            | 1                                 | 112.0
+25            | 1                                 | 112.0
+26            | 1                                 | 154.0
+27            | 1                                 | 154.0
+28            | 1                                 | 240.0
+29            | 1                                 | 240.0
+30            | 1                                 | 240.0
+31            | 1                                 | 240.0
+*******************************************************************************
+
+Warp 10 Statistics
+Number of Thread Masks Processed: 630
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+2                        | 3.81
+4                        | 0.95
+6                        | 3.81
+8                        | 0.95
+12                       | 4.76
+16                       | 54.76
+32                       | 30.95
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           0
+Percentage of Total Cycles Saved: 0.00
+Speed Up (%): 		          0.000
+Rel SIMD Eff:                     61.429
+Sim SIMD Eff:	                  61.429
+Percentage of Not SPLIT Div:	  100.000
+Max Occupancy:		          0
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  0
+Number of Reconvergences:         0
+Number of Scalarized Thread Masks: 60
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+*******************************************************************************
+
+Warp 11 Statistics
+Number of Thread Masks Processed: 510
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 5.88
+8                        | 5.88
+12                       | 5.88
+16                       | 44.12
+32                       | 38.24
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           3
+Percentage of Total Cycles Saved: 0.59
+Speed Up (%): 		          0.592
+Rel SIMD Eff:                     64.706
+Sim SIMD Eff:	                  64.867
+Percentage of Not SPLIT Div:	  98.551
+Max Occupancy:		          4
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  4
+Number of Reconvergences:         4
+Number of Scalarized Thread Masks: 57
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000001000100010001 | 4
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 9.0
+23            | 1                                 | 9.0
+27            | 1                                 | 9.0
+31            | 1                                 | 9.0
+*******************************************************************************
+
+Warp 12 Statistics
+Number of Thread Masks Processed: 617
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 4.86
+8                        | 4.86
+12                       | 4.86
+16                       | 53.81
+32                       | 31.60
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           20
+Percentage of Total Cycles Saved: 3.24
+Speed Up (%): 		          3.350
+Rel SIMD Eff:                     62.156
+Sim SIMD Eff:	                  55.648
+Percentage of Not SPLIT Div:	  84.536
+Max Occupancy:		          8
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  15
+Number of Reconvergences:         8
+Number of Scalarized Thread Masks: 41
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000011111111 | 8
+00000000000000000000000000001111 | 4
+00000000000000000001000100010001 | 3
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 5.0
+23            | 1                                 | 5.0
+24            | 1                                 | 9.0
+25            | 1                                 | 9.0
+26            | 1                                 | 9.0
+27            | 2                                 | 7.0
+28            | 2                                 | 204.0
+29            | 2                                 | 204.0
+30            | 2                                 | 204.0
+31            | 2                                 | 204.0
+*******************************************************************************
+
+Warp 13 Statistics
+Number of Thread Masks Processed: 589
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 5.09
+8                        | 5.09
+12                       | 5.09
+16                       | 51.61
+32                       | 33.11
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           20
+Percentage of Total Cycles Saved: 3.40
+Speed Up (%): 		          3.515
+Rel SIMD Eff:                     62.733
+Sim SIMD Eff:	                  54.685
+Percentage of Not SPLIT Div:	  84.211
+Max Occupancy:		          8
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  15
+Number of Reconvergences:         8
+Number of Scalarized Thread Masks: 41
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000011111111 | 8
+00000000000000000000000000001111 | 4
+00000000000000000001000100010001 | 3
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+19            | 1                                 | 118.0
+23            | 1                                 | 118.0
+24            | 1                                 | 9.0
+25            | 1                                 | 9.0
+26            | 1                                 | 9.0
+27            | 2                                 | 63.0
+28            | 2                                 | 190.0
+29            | 2                                 | 190.0
+30            | 2                                 | 190.0
+31            | 2                                 | 190.0
+*******************************************************************************
+
+Warp 14 Statistics
+Number of Thread Masks Processed: 561
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+4                        | 5.35
+8                        | 5.35
+12                       | 5.35
+16                       | 49.20
+32                       | 34.76
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           16
+Percentage of Total Cycles Saved: 2.85
+Speed Up (%): 		          2.936
+Rel SIMD Eff:                     63.369
+Sim SIMD Eff:	                  57.190
+Percentage of Not SPLIT Div:	  88.991
+Max Occupancy:		          8
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  12
+Number of Reconvergences:         8
+Number of Scalarized Thread Masks: 45
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000011111111 | 8
+00000000000000000000000000001111 | 4
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+24            | 1                                 | 9.0
+25            | 1                                 | 9.0
+26            | 1                                 | 9.0
+27            | 1                                 | 9.0
+28            | 2                                 | 176.0
+29            | 2                                 | 176.0
+30            | 2                                 | 176.0
+31            | 2                                 | 176.0
+*******************************************************************************
+
+Warp 15 Statistics
+Number of Thread Masks Processed: 510
+Thread Mask Profile
+Number of Active Threads | Percentage of Thread Masks
+-------------------------------------------------
+2                        | 4.71
+4                        | 1.18
+6                        | 4.71
+8                        | 1.18
+12                       | 5.88
+16                       | 44.12
+32                       | 38.24
+
+******************************************
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Number of Cycles Saved:           3
+Percentage of Total Cycles Saved: 0.59
+Speed Up (%): 		          0.592
+Rel SIMD Eff:                     64.118
+Sim SIMD Eff:	                  64.386
+Percentage of Not SPLIT Div:	  98.942
+Max Occupancy:		          2
+Percentage of Max Capacity:	  0.000
+Number of Scalarizations: 	  2
+Number of Reconvergences:         2
+Number of Scalarized Thread Masks: 57
+
+Scalarized Thread Masks:
+Thread Mask           	         | Number of Times Caused Scalarization
+------------------------------------------------------------------------
+00000000000000000000000000010001 | 2
+
+Thread Scalarization:
+Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
+-------------------------------------------------------------------------------
+27            | 1                                 | 9.0
+31            | 1                                 | 9.0
+*******************************************************************************
+
+******************************************
+Core Wide Statistics
+Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=8
+Avg. Number of Cycles Saved:           71.0
+Avg. Percentage of Total Cycles Saved: 7.51
+Avg. Speed Up (%): 		       9.822
+Avg. Rel SIMD Eff:                     59.853
+Avg. Sim SIMD Eff:	               58.416
+Avg. Percentage of Not SPLIT Div:      85.416
+Avg. Max Occupancy:		       7.6875
+Avg. Percentage of Max Capacity:       0.000
+Avg. Number of Scalarizations: 	       10.625
+Avg. Number of Reconvergences:         4.9375
+Avg. Divergence Duration (Cycles) Per Thread:     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50.5625, 50.5625, 54.5, 93.8125, 50.5625, 50.5625, 67.75, 98.4375, 57.0625, 57.0625, 77.75, 90.25, 101.56770833333334, 101.56770833333334, 113.50520833333334, 124.19270833333334]
+Avg. Number of All 0 Thread Masks: 58.5625
+Total Thread Mask Scalarization Counts:
+(00000000000000000000000000000000,00000000000000000000000000001111): 211
+(00000000000000001111111111110000,00000000000000001111111111111111): 842
+(11111111111111111111111111110000,11111111111111111111111111111111): 610
+(00000000000000000000000000000000,00000000000000000000001111111111): 10
+(11111111111111111111110000000000,11111111111111111111111111111111): 1
+(00000000000000000000000000000000,00000000000000001111111111111111): 44
+(11111111111111110000000000000000,11111111111111111111111111111111): 187
+(00000000000000000000000000000000,00000000000000000000000000011111): 10
+(11111111111111111111111111100000,11111111111111111111111111111111): 1
+(00000000000000001111111111100000,00000000000000001111111111111111): 19
+(00000000000000000111011101110000,00000000000000000111011101110111): 93
+(00000000000000000000000000000000,00000000000000000011001100110011): 217
+(00000000000000000000000000000000,00000000000000000000001100110011): 75
+(00000000000000000000000000000000,00000000000000000001000100010001): 128
+(00000000000000000000000000000000,00000000000000000000000000010001): 68
+(11111111111111111100110011000000,11111111111111111111111111111111): 13
+(00000000000000000000000000000000,00000000000000000000000000000111): 28
+(00000000000000000000000000000000,00000000000000000000000000000011): 28
+(00000000000000001110111011101110,00000000000000001111111111111111): 126
+(11111111111111111110111011101110,11111111111111111111111111111111): 127
+(00000000000000000000000000000000,00000000000000000000000011111111): 118
+(11111111111111111111111100000000,11111111111111111111111111111111): 28
+(00000000000000001111110011001100,00000000000000001111111111111111): 15
+(11111111111111111111110011001100,11111111111111111111111111111111): 13
+(00000000000000001110110011001100,00000000000000001111111111111111): 61
+(11111111111111111110110011001100,11111111111111111111111111111111): 52
+(00000000000000001111111111000000,00000000000000001111111111111111): 30
+(11111111111111111111111111000000,11111111111111111111111111111111): 26
+(11111111111111111110111000000000,11111111111111111111111111111111): 13
+(00000000000000001110111011100000,00000000000000001111111111111111): 62
+(11111111111111111110111011100000,11111111111111111111111111111111): 52
+(00000000000000001111111111101110,00000000000000001111111111111111): 1
+(11111111111111111111111111101110,11111111111111111111111111111111): 5
+******************************************
+Expirement Progress: 100%

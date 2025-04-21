@@ -1,9 +1,0 @@
-python3 heuristic_sim.py runs/new_mmul.txt jsons/testing.json
-Number of Expirements to be ran: 160
-
-Warp 0 Statistics
-Number of Thread Masks Processed: 239
-Thread Mask Profile
-Number of Active Threads | Percentage of Thread Masks
--------------------------------------------------
-32                       | 100.00
