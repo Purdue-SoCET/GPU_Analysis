@@ -561,6 +561,8 @@ if __name__ == "__main__":
 							print(f'{tid:<4}          | {per_thread_count[tid]:<4}                              | {average_div_dur[tid]:.1f}')
 					print("*******************************************************************************")
 
+			print(f"total number of reconvergences: {avg_num_reconvergences}")
+			print(f"total number of scalarizations: {avg_num_scalarizations}")
 			avg_speed_up 			   /= num_warps
 			avg_num_cycles_saved 	   /= num_warps
 			avg_pct_cycles_saved 	   /= num_warps
