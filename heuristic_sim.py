@@ -178,6 +178,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 	per_thread_count     = [0]*num_threads
 	sat_counters		 = [0]*num_threads
 	reconverge_pcs  	 = [0]*num_threads
+	already_scalarized   = {} 	# Dictionary of pcs and thread ids that have already been scalarized - Shrey
 
 	# tmask_pair_counts = {} 	# Dictionary of active tmask and result tmask pairs and their counts - Shrey
 	
@@ -218,7 +219,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 						should_scalarize = False
 						for start_end, pcs in scalarize_pcs.items():
 							for pc in pcs:
-								if current_instr_pc in pcs:
+								if (tid not in already_scalarized.get(current_instr_pc, set()) and current_instr_pc == pc):
 									reconvergence_pc = start_end[1]	# reconvergence pc
 									should_scalarize = True
 									# attempts_at_scalarization += 1
@@ -241,6 +242,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 
 							# if(is_split):
 							sat_counters[tid] = 0
+							already_scalarized[current_instr_pc] = tid
 
 							occupancy += 1
 							attempts_at_scalarization += 1
@@ -318,7 +320,7 @@ if __name__ == "__main__":
 	warps_stats	   = {}
 	num_threads    = 32
 	warps_to_probe = {}
-	instr_pcs	   = []	# list of all PCs - Shrey
+	instr_pcs	   = []	# dict of warps corresponding to PCs - Shrey
 
 	# needed for IPDOM analysis - Shrey
 	ipdom_analysis = {}	# list of divergent and reconvergence PCs - Shrey
@@ -374,7 +376,10 @@ if __name__ == "__main__":
 					instr_pc = re.search(tmask_pattern,line).group(3)		# grab instruction PC - Shrey
 					tmask    = re.search(tmask_pattern,line).group(4)
 
-					instr_pcs.append(instr_pc)	# add instruction PC to list - Shrey
+					# if(warp_id not in instr_pcs.keys()):	# check if warp_id is already in instr_pcs - Shrey
+					# 	instr_pcs[warp_id] = []	# add instruction PC to list - Shrey
+					
+					# instr_pcs[warp_id].append(instr_pc)	# add instruction PC to list - Shrey
 
 					# ids1  = re.search(tmask_pattern,line).group(5)
 					
@@ -410,7 +415,7 @@ if __name__ == "__main__":
 				# creates a dictionary of divergent and reconvergence PCs that map to PCs that fall within their range - Shrey
 				if 'instr_pc' in locals() and instr_pc is not None: 				# Ensure instr_pc exists before using it - Shrey
 					for start, end in pc_pairs:
-						if int(start, 16) <= int(instr_pc, 16) <= int(end, 16):		# check if instr_pc falls within divergent region / 16 is for hex -> decimal
+						if int(start, 16) < int(instr_pc, 16) < int(end, 16):		# check if instr_pc falls within divergent region / 16 is for hex -> decimal
 							if (start, end) not in scalarize_pcs:
 								scalarize_pcs[(start, end)] = set()  			# Use a set to store unique PCs - Shrey
 							scalarize_pcs[(start, end)].add(instr_pc)  			# Add ensures uniqueness - Shrey
@@ -427,6 +432,14 @@ if __name__ == "__main__":
 		# 		print(f"  {pc}")
 		# --------------------------------------------------------------
 
+		# Print the entire scalarize_pcs dictionary
+		print("Scalarize PCs Dictionary:")
+		for key, value in scalarize_pcs.items():
+			print(f"Branch PC: {key[0]}, Reconvergence PC: {key[1]}")
+			print("PCs to Scalarize:")
+			for pc in value:
+				print(f"  {pc}")
+	
 	except ValueError:
 		print(line)
 		print(instr_line)
