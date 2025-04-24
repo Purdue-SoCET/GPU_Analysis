@@ -78,12 +78,12 @@ def is_tid_on(tmask, tid):
 # 	return reconverge_tmask, is_split, div_instrs
 
 # Reconverges all threads whose reconvergence tmask matches the current tmask
-def reconverge(curr_instr_pc, scalar_mask, reconverge_pcs):
+def reconverge(curr_ipc, scalar_mask, reconverge_pcs):
 	num_reconv = 0
 
-	for tid, scalarized in enumerate(scalar_mask):
-		if(scalarized == 1):		
-			if(reconverge_pcs[tid] == curr_instr_pc):	# should check if reconv pc == current pc
+	for tid, bit in enumerate(scalar_mask):
+		if(bit == 1):		
+			if(reconverge_pcs[tid] == curr_ipc):	# should check if reconv pc == current pc
 				scalar_mask[tid] = 0
 				num_reconv += 1
 	
@@ -145,7 +145,7 @@ def and_scalar_mask(tmask, scalar_mask):
 #
 # 10. div_instrs: Dictionary of instructions associated with a possible reconvergence tmask for a given thread. (e.g. want to scalarize a thread but the last tmask where it was active had instr PRED.N so we don't scalarize it but increment the PRED.N entry in the dictionary)
 
-def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts, theta=1000, num_threads=32, capacity=32, num_scalar=1):
+def sat_counters(tmasks, ipcs, rpcs, scalarize_t0, tmask_pair_counts, theta=1000, num_threads=32, capacity=32, num_scalar=1):	
 	# Baseline number of cycles executed on vortex GPU
 	total_cycles         = len(tmasks)
 	sim_cycles			 = 0
@@ -174,13 +174,13 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 	speed_up	 		 = 0
 	scalarized_threads 	 = {}
 	scalar_mask 		 = [0]*num_threads
-	average_div_dur 	 = [0]*num_threads
+	average_div_dur 	 = [0]*num_threads	# returns the average number of cycles that a thread is scalarized for
 	per_thread_count     = [0]*num_threads
 	sat_counters		 = [0]*num_threads
 	reconverge_pcs  	 = [0]*num_threads
-	already_scalarized   = {} 	# Dictionary of pcs and thread ids that have already been scalarized - Shrey
-
+	# already_scalarized   = {} 	# Dictionary of pcs and thread ids that have already been scalarized - Shrey
 	# tmask_pair_counts = {} 	# Dictionary of active tmask and result tmask pairs and their counts - Shrey
+	nothing_on_simt = 0
 	
 	for idx, tmask in enumerate(tmasks):
 		
@@ -190,14 +190,14 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 		# Check if tmask is on the scalar core or not
 
 		# count number of cycles a thread is on the scalar mask (how many cycles it's divergent for)
-		for idxs, is_scalarized in enumerate(scalar_mask):
+		for thread, is_scalarized in enumerate(scalar_mask):
 			if (is_scalarized):
-				average_div_dur[idxs] += 1
+				average_div_dur[thread] += 1
 
 		tmask_on_simt, active_threads, result_tmask = and_scalar_mask(tmask, scalar_mask)
 		total_active_threads += active_threads
 
-		current_instr_pc = instrs[idx]
+		curr_ipc = ipcs[idx]
 
 		if tmask_on_simt == True:
 			## If not on the scalar cores
@@ -215,16 +215,22 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 					if(tid != None):
 						sat_counters[tid] += 1
 
-						# New 'should_scalarize' condition: check if current PC is in scalarize_pcs dict - Shrey
+						# OLD: New 'should_scalarize' condition: check if current PC is in scalarize_pcs dict - Shrey
+						# should_scalarize = False
+						# for start_end, pcs in scalarize_pcs.items():
+						# 	for pc in pcs:
+						# 		if (tid not in already_scalarized.get(curr_ipc, set()) and curr_ipc == pc):
+						# 			reconvergence_pc = start_end[1]	# reconvergence pc
+						# 			should_scalarize = True
+						# 			# attempts_at_scalarization += 1
+						# 			reconverge_pcs[tid] = reconvergence_pc
+						# 			break
+
+						# newest scalarization condition - Shrey
 						should_scalarize = False
-						for start_end, pcs in scalarize_pcs.items():
-							for pc in pcs:
-								if (tid not in already_scalarized.get(current_instr_pc, set()) and current_instr_pc == pc):
-									reconvergence_pc = start_end[1]	# reconvergence pc
-									should_scalarize = True
-									# attempts_at_scalarization += 1
-									reconverge_pcs[tid] = reconvergence_pc
-									break
+						if (rpcs[idx] != "0xffffffff"):
+							reconverge_pcs[tid] = rpcs[idx]
+							should_scalarize = True
 
 						### Check if count of the threads sat_counter reached threshold (theta)
 						### If so check the capacity 
@@ -242,7 +248,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 
 							# if(is_split):
 							sat_counters[tid] = 0
-							already_scalarized[current_instr_pc] = tid
+							# already_scalarized[curr_ipc] = tid
 
 							occupancy += 1
 							attempts_at_scalarization += 1
@@ -265,7 +271,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 			## Check if the tmask is a reconvergence tmask for any of the threads
 			reconv_threads = 0 # Refers to the number of threads that have reconverged in this cycle
 
-			reconv_threads = reconverge(current_instr_pc, scalar_mask, reconverge_pcs) # modified reconverge function to check if the reconvergence pc matches the current instr pc - Shrey
+			reconv_threads = reconverge(curr_ipc, scalar_mask, reconverge_pcs) # modified reconverge function to check if the reconvergence pc matches the current instr pc - Shrey
 
 			occupancy -= reconv_threads
 			num_reconv += reconv_threads
@@ -286,6 +292,7 @@ def sat_counters(tmasks, instrs, scalarize_t0, scalarize_pcs, tmask_pair_counts,
 
 		## If on the scalar core don't increment sim cycles as it is running in parallel with the other tmasks
 		else:
+			nothing_on_simt += 1
 			pass
 
 	speed_up		= total_cycles/sim_cycles
@@ -315,18 +322,18 @@ if __name__ == "__main__":
 	results_file = sys.argv[2]
 
 	warps_tmasks   = {}
-	warps_instrs   = {}
-	warps_ids	   = {}
+	warps_ipcs     = {}	# dict of instruction PCs - Shrey
+	warps_rpcs	   = {}	# dict of warps corresponding to PCs - Shrey
+	# warps_ids	   = {}
 	warps_stats	   = {}
 	num_threads    = 32
 	warps_to_probe = {}
-	instr_pcs	   = []	# dict of warps corresponding to PCs - Shrey
 
 	# needed for IPDOM analysis - Shrey
-	ipdom_analysis = {}	# list of divergent and reconvergence PCs - Shrey
-	pc_pairs       = []	# list of divergent and reconvergence PC pairs - Shrey
-	scalarize_pcs  = {}	# list of PCs that need to be scalarized (fall in divergence range) - Shrey
-	temp_branch_pc = None
+	# ipdom_analysis = {}	# list of divergent and reconvergence PCs - Shrey
+	# pc_pairs       = []	# list of divergent and reconvergence PC pairs - Shrey
+	# scalarize_pcs  = {}	# list of PCs that need to be scalarized (fall in divergence range) - Shrey
+	# temp_branch_pc = None
 
 	convergent_mask = "" 
 	in_kernel = 1
@@ -341,14 +348,14 @@ if __name__ == "__main__":
 				config_pattern = r"-gpgpu_shader_core_pipeline              ([0-9]+):([0-9]+)"
 				warp_num_pattern = r"Start warp ([0-9]+) and end warp ([0-9]+)"
 				# tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), active_mask=((0|1)+)"
-				tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), pc=(0x[0-9a-fA-F]+), active_mask=([01]+)"	# regex for instruction PC - Shrey
+				tmask_pattern = r"warp_id=([0-9]+), core_id=([0-9]+), pc=(0x[0-9a-fA-F]+), rpc = (0x[0-9a-fA-F]+), active_mask=([01]+)"
 				end_pattern = r"GPGPU-Sim: \*\*\* exit detected \*\*\*"
 				
-				# this messed everything up
-				# ipdom_pattern1 = r"\(potential\) branch divergence @  PC=0x([0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
-				# ipdom_pattern2 = r"immediate post dominator      @  PC=0x([0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
-				ipdom_pattern1 = r"\(potential\) branch divergence @  PC=(0x[0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
-				ipdom_pattern2 = r"immediate post dominator      @  PC=(0x[0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
+				# # this messed everything up
+				# # ipdom_pattern1 = r"\(potential\) branch divergence @  PC=0x([0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
+				# # ipdom_pattern2 = r"immediate post dominator      @  PC=0x([0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
+				# ipdom_pattern1 = r"\(potential\) branch divergence @  PC=(0x[0-9a-fA-F]+)"		# regex for branch divergence PC - Shrey
+				# ipdom_pattern2 = r"immediate post dominator      @  PC=(0x[0-9a-fA-F]+)"		# regex for ipdom PC - Shrey
 
 				if(re.search(config_pattern,line)):
 					total_num_threads = int(re.search(config_pattern,line).group(1))
@@ -366,15 +373,17 @@ if __name__ == "__main__":
 						warps_to_probe[i] = str(i)
 						if(warps_to_probe[i] not in warps_tmasks.keys()):
 							warps_tmasks[warps_to_probe[i]] = []
-							warps_instrs[warps_to_probe[i]] = []
-							warps_ids[warps_to_probe[i]] 	= []
+							warps_ipcs[warps_to_probe[i]]   = []	# instruction PCs - Shrey
+							# warps_ids[warps_to_probe[i]] 	= []
+							warps_rpcs[warps_to_probe[i]] 	= []	# reconvergence PCs - Shrey
 							warps_stats[warps_to_probe[i]] 	= []
 
 				if(re.search(tmask_pattern,line)):
-					warp_id  = re.search(tmask_pattern,line).group(1)
-					core_id  = re.search(tmask_pattern,line).group(2)
-					instr_pc = re.search(tmask_pattern,line).group(3)		# grab instruction PC - Shrey
-					tmask    = re.search(tmask_pattern,line).group(4)
+					warp_id   = re.search(tmask_pattern,line).group(1)
+					core_id   = re.search(tmask_pattern,line).group(2)
+					instr_pc  = re.search(tmask_pattern,line).group(3)		# grab instruction PC - Shrey
+					reconv_pc = re.search(tmask_pattern,line).group(4)		# grab reconvergence PC - Shrey
+					tmask     = re.search(tmask_pattern,line).group(5)
 
 					# if(warp_id not in instr_pcs.keys()):	# check if warp_id is already in instr_pcs - Shrey
 					# 	instr_pcs[warp_id] = []	# add instruction PC to list - Shrey
@@ -396,29 +405,30 @@ if __name__ == "__main__":
 
 					if(core_id == "0"):
 						warps_tmasks[warp_id].append(tmask)
-						# warps_instrs[warp_id].append(instr)
+						warps_ipcs[warp_id].append(instr_pc)
+						warps_rpcs[warp_id].append(reconv_pc)	# add reconvergence PC to list - Shrey
 						# warps_ids[warp_id].append(ids1)
 
 				# creates a list of pairs of divergent and reconvergence PCs using the IPDOM section of the log - Shrey
-				if(re.search(ipdom_pattern1,line)):
-					match_branch_div_pc = re.search(ipdom_pattern1,line)
-					if (match_branch_div_pc):
-						temp_branch_pc = match_branch_div_pc.group(1)			# store branch divergence PC temporarily - Shrey
+				# if(re.search(ipdom_pattern1,line)):
+				# 	match_branch_div_pc = re.search(ipdom_pattern1,line)
+				# 	if (match_branch_div_pc):
+				# 		temp_branch_pc = match_branch_div_pc.group(1)			# store branch divergence PC temporarily - Shrey
 
-				if(re.search(ipdom_pattern2,line)):
-					match_dominator_pc = re.search(ipdom_pattern2,line)
-					if (match_dominator_pc) and (temp_branch_pc is not None):
-						dominator_pc = match_dominator_pc.group(1)				# grab ipdom reconvergence PC - Shrey
-						pc_pairs.append((temp_branch_pc, dominator_pc))			# add branch divergence and reconvergence PC pair to list - Shrey
-						temp_branch_pc = None									# reset temp_branch_pc - Shrey
+				# if(re.search(ipdom_pattern2,line)):
+				# 	match_dominator_pc = re.search(ipdom_pattern2,line)
+				# 	if (match_dominator_pc) and (temp_branch_pc is not None):
+				# 		dominator_pc = match_dominator_pc.group(1)				# grab ipdom reconvergence PC - Shrey
+				# 		pc_pairs.append((temp_branch_pc, dominator_pc))			# add branch divergence and reconvergence PC pair to list - Shrey
+				# 		temp_branch_pc = None									# reset temp_branch_pc - Shrey
 
 				# creates a dictionary of divergent and reconvergence PCs that map to PCs that fall within their range - Shrey
-				if 'instr_pc' in locals() and instr_pc is not None: 				# Ensure instr_pc exists before using it - Shrey
-					for start, end in pc_pairs:
-						if int(start, 16) < int(instr_pc, 16) < int(end, 16):		# check if instr_pc falls within divergent region / 16 is for hex -> decimal
-							if (start, end) not in scalarize_pcs:
-								scalarize_pcs[(start, end)] = set()  			# Use a set to store unique PCs - Shrey
-							scalarize_pcs[(start, end)].add(instr_pc)  			# Add ensures uniqueness - Shrey
+				# if 'instr_pc' in locals() and instr_pc is not None: 				# Ensure instr_pc exists before using it - Shrey
+				# 	for start, end in pc_pairs:
+				# 		if int(start, 16) < int(instr_pc, 16) < int(end, 16):		# check if instr_pc falls within divergent region / 16 is for hex -> decimal
+				# 			if (start, end) not in scalarize_pcs:
+				# 				scalarize_pcs[(start, end)] = set()  			# Use a set to store unique PCs - Shrey
+				# 			scalarize_pcs[(start, end)].add(instr_pc)  			# Add ensures uniqueness - Shrey
 
 				if(re.search(end_pattern,line)):
 					break
@@ -433,12 +443,12 @@ if __name__ == "__main__":
 		# --------------------------------------------------------------
 
 		# Print the entire scalarize_pcs dictionary
-		print("Scalarize PCs Dictionary:")
-		for key, value in scalarize_pcs.items():
-			print(f"Branch PC: {key[0]}, Reconvergence PC: {key[1]}")
-			print("PCs to Scalarize:")
-			for pc in value:
-				print(f"  {pc}")
+		# print("Scalarize PCs Dictionary:")
+		# for key, value in scalarize_pcs.items():
+		# 	print(f"Branch PC: {key[0]}, Reconvergence PC: {key[1]}")
+		# 	print("PCs to Scalarize:")
+		# 	for pc in value:
+		# 		print(f"  {pc}")
 	
 	except ValueError:
 		print(line)
@@ -447,10 +457,10 @@ if __name__ == "__main__":
 
 	num_warps = len(warps_to_probe.keys())
 
-	# thetas = range(10, 2000, 100)
-	thetas = [10]
-	# num_scalars = range(1, 9)
-	num_scalars = [8]
+	thetas = range(10, 1000, 50)	# run this when collecting real data
+	# thetas = [10]					# run this ONLY for the avg div dir bar graph
+	num_scalars = range(1, 9)		# run this when collecting real data
+	# num_scalars = [8]				# run this ONLY for the avg div dur bar graph
 	capacity = 16
 	
 	expirement = {}
@@ -478,15 +488,17 @@ if __name__ == "__main__":
 			warpwide_avg_div_dur = [0] * num_threads 
 			tmask_pair_counts = {}	# Dictionary of active tmask and result tmask pairs and their counts - Shrey
 
-			for warp_id in warps_to_probe.values():
+			for warp_id in warps_to_probe.values():	# iterates through every warp id
 
 				tmask_profile = [0]*num_threads
 
 				total_active_threads = 0
 
 				tmasks = warps_tmasks[warp_id]
-				instrs = warps_instrs[warp_id]
-				ids    = warps_ids[warp_id]
+				ipcs = warps_ipcs[warp_id]		# instruction PCs - Shrey
+				rpcs = warps_rpcs[warp_id]		# reconvergence PCs - Shrey
+				
+				# ids    = warps_ids[warp_id]
 
 				for tmask in tmasks:
 					tmask = conv_str_to_list(tmask)
@@ -513,13 +525,14 @@ if __name__ == "__main__":
 				else:
 					scalarize_t0 = 1
 
-				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur, tmask_pair_counts, tmask_scalarized_count = sat_counters(tmasks, instr_pcs, scalarize_t0, scalarize_pcs, tmask_pair_counts, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
+				speed_up, scalarized_threads, max_occupancy, num_reconv, cycles_saved, per_thread_count, simd_efficiency, frac_pred, frac_ocp_full, div_instrs, average_div_dur, tmask_pair_counts, tmask_scalarized_count = sat_counters(tmasks, ipcs, rpcs, scalarize_t0, tmask_pair_counts, theta=theta, num_threads=num_threads, capacity=capacity, num_scalar=num_scalar)
+				# exit()
 				num_scalarizations = 0
 
 				for scalar_tmask in scalarized_threads.keys():
 					num_scalarizations += scalarized_threads[scalar_tmask]
-
 				
+
 				warps_stats[warp_id].append(cycles_saved)
 				warps_stats[warp_id].append(speed_up)
 				warps_stats[warp_id].append(rel_simd_efficiency)
@@ -546,6 +559,9 @@ if __name__ == "__main__":
 				avg_num_reconvergences  	+= num_reconv
 				warpwide_avg_div_dur 		 = np.add(warpwide_avg_div_dur, average_div_dur)	# adding two lists together
 				avg_tmask_scalarized_count  += tmask_scalarized_count
+
+				# print(f"total number of reconvergences: {avg_num_reconvergences}")
+				# print(f"total number of scalarizations: {avg_num_scalarizations}")
 
 				if(number_of_expirements_done == 0):
 					print("\n******************************************")
@@ -574,8 +590,8 @@ if __name__ == "__main__":
 							print(f'{tid:<4}          | {per_thread_count[tid]:<4}                              | {average_div_dur[tid]:.1f}')
 					print("*******************************************************************************")
 
-			print(f"total number of reconvergences: {avg_num_reconvergences}")
-			print(f"total number of scalarizations: {avg_num_scalarizations}")
+			# print(f"total number of reconvergences: {avg_num_reconvergences}")
+			# print(f"total number of scalarizations: {avg_num_scalarizations}")
 			avg_speed_up 			   /= num_warps
 			avg_num_cycles_saved 	   /= num_warps
 			avg_pct_cycles_saved 	   /= num_warps
@@ -586,7 +602,7 @@ if __name__ == "__main__":
 			avg_pct_max_cap 	       /= num_warps
 			avg_num_scalarizations     /= num_warps
 			avg_num_reconvergences     /= num_warps
-			warpwide_avg_div_dur        = [avg_div_dur/num_warps for avg_div_dur in warpwide_avg_div_dur]	# divide by 2 to get average divergence duration
+			warpwide_avg_div_dur        = [avg_div_dur/num_warps for avg_div_dur in warpwide_avg_div_dur]
 			avg_tmask_scalarized_count /= num_warps
 
 			expirement[str((num_scalar,theta))] = [num_scalar,theta,avg_num_cycles_saved,avg_pct_cycles_saved,avg_speed_up,avg_rel_simd_efficiency,avg_simd_efficiency,avg_pct_non_split_div,avg_max_ocp,avg_pct_max_cap,avg_num_scalarizations,avg_num_reconvergences,warpwide_avg_div_dur]
