@@ -457,10 +457,10 @@ if __name__ == "__main__":
 
 	num_warps = len(warps_to_probe.keys())
 
-	thetas = range(10, 1000, 50)	# run this when collecting real data
-	# thetas = [10]					# run this ONLY for the avg div dir bar graph
-	num_scalars = range(1, 9)		# run this when collecting real data
-	# num_scalars = [8]				# run this ONLY for the avg div dur bar graph
+	# thetas = range(10, 1000, 50)	# run this when collecting real data
+	thetas = [10]					# run this ONLY for the avg div dir bar graph
+	# num_scalars = range(1, 9)		# run this when collecting real data
+	num_scalars = [8]				# run this ONLY for the avg div dur bar graph
 	capacity = 16
 	
 	expirement = {}
