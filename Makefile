@@ -1,6 +1,6 @@
-SOURCE_FILE := presentation/gaussian/new_gaussian.txt
-DEST_FILE := jsons/gaussian.json
-PLOTS_SUB_DIR := presentation/gaussian/plots
+SOURCE_FILE := presentation/backprop/new_backprop.txt
+DEST_FILE := jsons/backprop.json
+PLOTS_SUB_DIR := presentation/backprop/plots
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)

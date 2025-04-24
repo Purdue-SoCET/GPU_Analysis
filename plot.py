@@ -291,7 +291,7 @@ if __name__ == "__main__":
     plt.xticks(x + bar_width * (num_experiments / 2 - 0.5), valid_thread_ids)
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f'{dest_folder}/avg_div_dur_per_thread.png')
+    plt.savefig(f'{dest_folder}/pre_ipdom_avg_div_dur_per_thread.png')
     plt.close()
 
 
