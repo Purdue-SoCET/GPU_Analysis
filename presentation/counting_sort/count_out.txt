@@ -1,143 +1,0 @@
-python3 heuristic_sim.py presentation/counting_sort/count.txt presentation/counting_sort/count.json
-Number of Expirements to be ran: 160
-
-Warp 0 Statistics
-Number of Thread Masks Processed: 18784
-Thread Mask Profile
-Number of Active Threads | Percentage of Thread Masks
--------------------------------------------------
-8                        | 4.60
-16                       | 4.60
-32                       | 90.80
-
-******************************************
-Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=1
-Number of Cycles Saved:           0
-Percentage of Total Cycles Saved: 0.00
-Speed Up (%): 		          0.000
-Rel SIMD Eff:                     94.250
-Sim SIMD Eff:	                  94.250
-Percentage of Not SPLIT Div:	  0.000
-Max Occupancy:		          0
-Percentage of Max Capacity:	  0.000
-Number of Scalarizations: 	  0
-Number of Reconvergences:         0
-Number of Scalarized Thread Masks: 0
-
-Scalarized Thread Masks:
-Thread Mask           	         | Number of Times Caused Scalarization
-------------------------------------------------------------------------
-
-Thread Scalarization:
-Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
--------------------------------------------------------------------------------
-*******************************************************************************
-
-Warp 1 Statistics
-Number of Thread Masks Processed: 16192
-Thread Mask Profile
-Number of Active Threads | Percentage of Thread Masks
--------------------------------------------------
-32                       | 100.00
-
-******************************************
-Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=1
-Number of Cycles Saved:           0
-Percentage of Total Cycles Saved: 0.00
-Speed Up (%): 		          0.000
-Rel SIMD Eff:                     100.000
-Sim SIMD Eff:	                  100.000
-Percentage of Not SPLIT Div:	  0.000
-Max Occupancy:		          0
-Percentage of Max Capacity:	  0.000
-Number of Scalarizations: 	  0
-Number of Reconvergences:         0
-Number of Scalarized Thread Masks: 0
-
-Scalarized Thread Masks:
-Thread Mask           	         | Number of Times Caused Scalarization
-------------------------------------------------------------------------
-
-Thread Scalarization:
-Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
--------------------------------------------------------------------------------
-*******************************************************************************
-
-Warp 2 Statistics
-Number of Thread Masks Processed: 15328
-Thread Mask Profile
-Number of Active Threads | Percentage of Thread Masks
--------------------------------------------------
-32                       | 100.00
-
-******************************************
-Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=1
-Number of Cycles Saved:           0
-Percentage of Total Cycles Saved: 0.00
-Speed Up (%): 		          0.000
-Rel SIMD Eff:                     100.000
-Sim SIMD Eff:	                  100.000
-Percentage of Not SPLIT Div:	  0.000
-Max Occupancy:		          0
-Percentage of Max Capacity:	  0.000
-Number of Scalarizations: 	  0
-Number of Reconvergences:         0
-Number of Scalarized Thread Masks: 0
-
-Scalarized Thread Masks:
-Thread Mask           	         | Number of Times Caused Scalarization
-------------------------------------------------------------------------
-
-Thread Scalarization:
-Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
--------------------------------------------------------------------------------
-*******************************************************************************
-
-Warp 3 Statistics
-Number of Thread Masks Processed: 15328
-Thread Mask Profile
-Number of Active Threads | Percentage of Thread Masks
--------------------------------------------------
-32                       | 100.00
-
-******************************************
-Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=1
-Number of Cycles Saved:           0
-Percentage of Total Cycles Saved: 0.00
-Speed Up (%): 		          0.000
-Rel SIMD Eff:                     100.000
-Sim SIMD Eff:	                  100.000
-Percentage of Not SPLIT Div:	  0.000
-Max Occupancy:		          0
-Percentage of Max Capacity:	  0.000
-Number of Scalarizations: 	  0
-Number of Reconvergences:         0
-Number of Scalarized Thread Masks: 0
-
-Scalarized Thread Masks:
-Thread Mask           	         | Number of Times Caused Scalarization
-------------------------------------------------------------------------
-
-Thread Scalarization:
-Thread Number | Number of Times Thread Scalarized | Average Divergence Duration
--------------------------------------------------------------------------------
-*******************************************************************************
-
-******************************************
-Core Wide Statistics
-Saturating Counters: Theta=10, Capacity=16, Thread Scalarization Bandwidth=1
-Avg. Number of Cycles Saved:           0.0
-Avg. Percentage of Total Cycles Saved: 0.00
-Avg. Speed Up (%): 		       0.000
-Avg. Rel SIMD Eff:                     98.563
-Avg. Sim SIMD Eff:	               98.563
-Avg. Percentage of Not SPLIT Div:      0.000
-Avg. Max Occupancy:		       0.0
-Avg. Percentage of Max Capacity:       0.000
-Avg. Number of Scalarizations: 	       0.0
-Avg. Number of Reconvergences:         0.0
-Avg. Divergence Duration (Cycles) Per Thread:     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-Avg. Number of All 0 Thread Masks: 0.0
-Total Thread Mask Scalarization Counts:
-******************************************
-Expirement Progress: 1%Expirement Progress: 1%Expirement Progress: 2%Expirement Progress: 2%Expirement Progress: 3%Expirement Progress: 4%Expirement Progress: 4%Expirement Progress: 5%Expirement Progress: 6%Expirement Progress: 6%Expirement Progress: 7%Expirement Progress: 8%Expirement Progress: 8%Expirement Progress: 9%Expirement Progress: 9%Expirement Progress: 10%Expirement Progress: 11%Expirement Progress: 11%Expirement Progress: 12%Expirement Progress: 12%Expirement Progress: 13%Expirement Progress: 14%Expirement Progress: 14%Expirement Progress: 15%Expirement Progress: 16%Expirement Progress: 16%Expirement Progress: 17%Expirement Progress: 18%Expirement Progress: 18%Expirement Progress: 19%Expirement Progress: 19%Expirement Progress: 20%Expirement Progress: 21%Expirement Progress: 21%Expirement Progress: 22%Expirement Progress: 22%Expirement Progress: 23%Expirement Progress: 24%Expirement Progress: 24%Expirement Progress: 25%Expirement Progress: 26%Expirement Progress: 26%Expirement Progress: 27%Expirement Progress: 28%Expirement Progress: 28%Expirement Progress: 29%Expirement Progress: 29%Expirement Progress: 30%Expirement Progress: 31%Expirement Progress: 31%Expirement Progress: 32%Expirement Progress: 32%Expirement Progress: 33%Expirement Progress: 34%Expirement Progress: 34%Expirement Progress: 35%Expirement Progress: 36%Expirement Progress: 36%Expirement Progress: 37%Expirement Progress: 38%Expirement Progress: 38%Expirement Progress: 39%Expirement Progress: 39%Expirement Progress: 40%Expirement Progress: 41%Expirement Progress: 41%Expirement Progress: 42%Expirement Progress: 42%Expirement Progress: 43%Expirement Progress: 44%Expirement Progress: 44%Expirement Progress: 45%Expirement Progress: 46%Expirement Progress: 46%Expirement Progress: 47%Expirement Progress: 48%Expirement Progress: 48%Expirement Progress: 49%Expirement Progress: 49%Expirement Progress: 50%Expirement Progress: 51%Expirement Progress: 51%Expirement Progress: 52%Expirement Progress: 52%Expirement Progress: 53%Expirement Progress: 54%Expirement Progress: 54%Expirement Progress: 55%Expirement Progress: 56%Expirement Progress: 56%Expirement Progress: 57%Expirement Progress: 57%Expirement Progress: 58%Expirement Progress: 59%Expirement Progress: 59%Expirement Progress: 60%Expirement Progress: 61%Expirement Progress: 61%Expirement Progress: 62%Expirement Progress: 62%Expirement Progress: 63%Expirement Progress: 64%Expirement Progress: 64%Expirement Progress: 65%Expirement Progress: 66%Expirement Progress: 66%Expirement Progress: 67%Expirement Progress: 68%Expirement Progress: 68%Expirement Progress: 69%Expirement Progress: 69%Expirement Progress: 70%Expirement Progress: 71%Expirement Progress: 71%Expirement Progress: 72%Expirement Progress: 72%Expirement Progress: 73%Expirement Progress: 74%Expirement Progress: 74%Expirement Progress: 75%Expirement Progress: 76%Expirement Progress: 76%Expirement Progress: 77%Expirement Progress: 78%Expirement Progress: 78%Expirement Progress: 79%Expirement Progress: 79%Expirement Progress: 80%Expirement Progress: 81%Expirement Progress: 81%Expirement Progress: 82%Expirement Progress: 82%Expirement Progress: 83%Expirement Progress: 84%Expirement Progress: 84%Expirement Progress: 85%Expirement Progress: 86%Expirement Progress: 86%Expirement Progress: 87%Expirement Progress: 88%Expirement Progress: 88%Expirement Progress: 89%Expirement Progress: 89%Expirement Progress: 90%Expirement Progress: 91%Expirement Progress: 91%Expirement Progress: 92%Expirement Progress: 92%Expirement Progress: 93%Expirement Progress: 94%Expirement Progress: 94%Expirement Progress: 95%Expirement Progress: 96%Expirement Progress: 96%Expirement Progress: 97%Expirement Progress: 98%Expirement Progress: 98%Expirement Progress: 99%Expirement Progress: 99%Expirement Progress: 100%

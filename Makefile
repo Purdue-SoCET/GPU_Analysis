@@ -1,6 +1,6 @@
-SOURCE_FILE := presentation/counting_sort/count.txt
-DEST_FILE := presentation/counting_sort/count.json
-PLOTS_SUB_DIR := presentation/counting_sort/plots
+SOURCE_FILE := presentation/counting_sort/count_4.txt
+DEST_FILE := presentation/counting_sort/count_4.json
+PLOTS_SUB_DIR := presentation/counting_sort/plots_4
 
 experiment:
 	python3 heuristic_sim.py $(SOURCE_FILE) $(DEST_FILE)
